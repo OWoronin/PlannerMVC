@@ -1,0 +1,27 @@
+EXEC sp_msforeachtable "ALTER TABLE ? NOCHECK CONSTRAINT ALL";
+
+DELETE FROM Tasks;
+DBCC CHECKIDENT ('Tasks', RESEED, 0);
+
+DELETE FROM Reminders;
+DBCC CHECKIDENT ('Reminders', RESEED, 0);
+
+DELETE FROM Meetings;
+DBCC CHECKIDENT ('Meetings', RESEED, 0);
+
+DELETE FROM Days;
+DBCC CHECKIDENT ('Days', RESEED, 0);
+
+DELETE FROM Planners;
+DBCC CHECKIDENT ('Planners', RESEED, 0);
+
+DELETE FROM Statuses;
+DBCC CHECKIDENT ('Statuses', RESEED, 0);
+
+DELETE FROM Difficulties;
+DBCC CHECKIDENT ('Difficulties', RESEED, 0);
+
+DELETE FROM Priorities;
+DBCC CHECKIDENT ('Priorities', RESEED, 0);
+
+EXEC sp_msforeachtable "ALTER TABLE ? WITH CHECK CHECK CONSTRAINT ALL";
