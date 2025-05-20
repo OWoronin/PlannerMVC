@@ -1,4 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Pz_Proj_11_12.Data;
 using Pz_Proj_11_12.Models;
 using System.Diagnostics;
 
@@ -6,16 +8,24 @@ namespace Pz_Proj_11_12.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly PlannerContext _context; 
 
-        public HomeController(ILogger<HomeController> logger)
+
+        public HomeController(PlannerContext context)
         {
-            _logger = logger;
+            _context = context;
         }
 
         public IActionResult Index()
         {
-            return View();
+            var planner = _context
+                .Planners.Include(p => p.Days).ThenInclude(d => d.Tasks).ThenInclude(t => t.Status)
+                .Include(p => p.Days).ThenInclude(d => d.Tasks).ThenInclude(t => t.Priority)
+                .Include(p => p.Days).ThenInclude(d => d.Tasks).ThenInclude(t => t.Difficulty)
+                .Include(d => d.Days).ThenInclude(d => d.Reminders)
+                .Include(d => d.Days).ThenInclude(d => d.Meetings).ThenInclude(m => m.Priority)
+                .First();
+            return View(planner);
         }
 
         public IActionResult Privacy()

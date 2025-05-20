@@ -49,32 +49,44 @@ namespace Pz_Proj_11_12.Controllers
         }
 
         // GET: Task/Create
-        public IActionResult Create()
+        public IActionResult Create(int? dayId)
         {
-            ViewData["DayId"] = new SelectList(_context.Days, "Id", "Id");
-            ViewData["DifficultyId"] = new SelectList(_context.Difficulties, "Id", "Id");
-            ViewData["PriorityId"] = new SelectList(_context.Priorities, "Id", "Id");
-            ViewData["StatusId"] = new SelectList(_context.Statuses, "Id", "Id");
-            return View();
+            int day = dayId ?? 0;
+
+            var taskModel = new TaskModel
+            {
+                DayId = day
+            };
+
+            ViewData["DayId"] = new SelectList(_context.Days, "Id", "Name", day);
+            ViewData["DifficultyId"] = new SelectList(_context.Difficulties, "Id", "Name");
+            ViewData["PriorityId"] = new SelectList(_context.Priorities, "Id", "Name");
+            ViewData["StatusId"] = new SelectList(_context.Statuses, "Id", "Name");
+
+            return View(taskModel);
         }
+
 
         // POST: Task/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Description,DifficultyId,PriorityId,StatusId,CreatedDate,DayId")] TaskModel taskModel)
+        public async Task<IActionResult> Create([Bind("Id,Name,Description,DifficultyId,PriorityId,StatusId,DayId")] TaskModel taskModel)
         {
+            ModelState.Remove("CreatedDate"); 
+
             if (ModelState.IsValid)
             {
+                taskModel.CreatedDate = DateTime.Now;
                 _context.Add(taskModel);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["DayId"] = new SelectList(_context.Days, "Id", "Id", taskModel.DayId);
-            ViewData["DifficultyId"] = new SelectList(_context.Difficulties, "Id", "Id", taskModel.DifficultyId);
-            ViewData["PriorityId"] = new SelectList(_context.Priorities, "Id", "Id", taskModel.PriorityId);
-            ViewData["StatusId"] = new SelectList(_context.Statuses, "Id", "Id", taskModel.StatusId);
+            ViewData["DayId"] = new SelectList(_context.Days, "Id", "Name", taskModel.DayId);
+            ViewData["DifficultyId"] = new SelectList(_context.Difficulties, "Id", "Name", taskModel.DifficultyId);     
+            ViewData["PriorityId"] = new SelectList(_context.Priorities, "Id", "Name", taskModel.PriorityId);
+            ViewData["StatusId"] = new SelectList(_context.Statuses, "Id", "Name", taskModel.StatusId);
             return View(taskModel);
         }
 
@@ -91,10 +103,10 @@ namespace Pz_Proj_11_12.Controllers
             {
                 return NotFound();
             }
-            ViewData["DayId"] = new SelectList(_context.Days, "Id", "Id", taskModel.DayId);
-            ViewData["DifficultyId"] = new SelectList(_context.Difficulties, "Id", "Id", taskModel.DifficultyId);
-            ViewData["PriorityId"] = new SelectList(_context.Priorities, "Id", "Id", taskModel.PriorityId);
-            ViewData["StatusId"] = new SelectList(_context.Statuses, "Id", "Id", taskModel.StatusId);
+            ViewData["DayId"] = new SelectList(_context.Days, "Id", "Name", taskModel.DayId);
+            ViewData["DifficultyId"] = new SelectList(_context.Difficulties, "Id", "Name", taskModel.DifficultyId);
+            ViewData["PriorityId"] = new SelectList(_context.Priorities, "Id", "Name", taskModel.PriorityId);
+            ViewData["StatusId"] = new SelectList(_context.Statuses, "Id", "Name", taskModel.StatusId);
             return View(taskModel);
         }
 
@@ -103,12 +115,15 @@ namespace Pz_Proj_11_12.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,DifficultyId,PriorityId,StatusId,CreatedDate,DayId")] TaskModel taskModel)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,DifficultyId,PriorityId,StatusId,DayId")] TaskModel taskModel)
         {
+
             if (id != taskModel.Id)
             {
                 return NotFound();
             }
+
+            ModelState.Remove("CreatedDate");
 
             if (ModelState.IsValid)
             {
@@ -130,10 +145,10 @@ namespace Pz_Proj_11_12.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["DayId"] = new SelectList(_context.Days, "Id", "Id", taskModel.DayId);
-            ViewData["DifficultyId"] = new SelectList(_context.Difficulties, "Id", "Id", taskModel.DifficultyId);
-            ViewData["PriorityId"] = new SelectList(_context.Priorities, "Id", "Id", taskModel.PriorityId);
-            ViewData["StatusId"] = new SelectList(_context.Statuses, "Id", "Id", taskModel.StatusId);
+            ViewData["DayId"] = new SelectList(_context.Days, "Id", "Name", taskModel.DayId);
+            ViewData["DifficultyId"] = new SelectList(_context.Difficulties, "Id", "Name", taskModel.DifficultyId);
+            ViewData["PriorityId"] = new SelectList(_context.Priorities, "Id", "Name", taskModel.PriorityId);
+            ViewData["StatusId"] = new SelectList(_context.Statuses, "Id", "Name", taskModel.StatusId);
             return View(taskModel);
         }
 

@@ -49,7 +49,7 @@
                 @Html.DisplayFor(modelItem => item.Description)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Priority.Id)
+                @Html.DisplayFor(modelItem => item.Priority.Name)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.CreatedDate)
@@ -64,7 +64,7 @@
                 @Html.DisplayFor(modelItem => item.EndTime)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Day.Id)
+                @Html.DisplayFor(modelItem => item.Day.Name)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

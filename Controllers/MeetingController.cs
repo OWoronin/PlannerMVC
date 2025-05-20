@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Pz_Proj_11_12.Data;
 using Pz_Proj_11_12.Models;
 
+
 namespace Pz_Proj_11_12.Controllers
 {
     public class MeetingController : Controller
@@ -47,11 +48,17 @@ namespace Pz_Proj_11_12.Controllers
         }
 
         // GET: Meeting/Create
-        public IActionResult Create()
+        public IActionResult Create(int? dayId)
         {
-            ViewData["DayId"] = new SelectList(_context.Days, "Id", "Id");
-            ViewData["PriorityId"] = new SelectList(_context.Priorities, "Id", "Id");
-            return View();
+            int day = dayId ?? 0;
+
+            var meeting = new Meeting
+            {
+                DayId = day
+            };
+            ViewData["DayId"] = new SelectList(_context.Days, "Id", "Name", day);
+            ViewData["PriorityId"] = new SelectList(_context.Priorities, "Id", "Name");
+            return View(meeting);
         }
 
         // POST: Meeting/Create
@@ -59,16 +66,19 @@ namespace Pz_Proj_11_12.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Description,PriorityId,CreatedDate,Location,StartTime,EndTime,DayId")] Meeting meeting)
+        public async Task<IActionResult> Create([Bind("Id,Name,Description,PriorityId, Location,StartTime,EndTime,DayId")] Meeting meeting)
         {
+            ModelState.Remove("CreatedDate");
+
             if (ModelState.IsValid)
             {
-                _context.Add(meeting);
+				meeting.CreatedDate = DateTime.Now;
+				_context.Add(meeting);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["DayId"] = new SelectList(_context.Days, "Id", "Id", meeting.DayId);
-            ViewData["PriorityId"] = new SelectList(_context.Priorities, "Id", "Id", meeting.PriorityId);
+            ViewData["DayId"] = new SelectList(_context.Days, "Id", "Name", meeting.DayId);
+            ViewData["PriorityId"] = new SelectList(_context.Priorities, "Id", "Name", meeting.PriorityId);
             return View(meeting);
         }
 
@@ -85,8 +95,8 @@ namespace Pz_Proj_11_12.Controllers
             {
                 return NotFound();
             }
-            ViewData["DayId"] = new SelectList(_context.Days, "Id", "Id", meeting.DayId);
-            ViewData["PriorityId"] = new SelectList(_context.Priorities, "Id", "Id", meeting.PriorityId);
+            ViewData["DayId"] = new SelectList(_context.Days, "Id", "Name", meeting.DayId);
+            ViewData["PriorityId"] = new SelectList(_context.Priorities, "Id", "Name", meeting.PriorityId);
             return View(meeting);
         }
 
@@ -102,7 +112,9 @@ namespace Pz_Proj_11_12.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+			ModelState.Remove("CreatedDate");
+
+			if (ModelState.IsValid)
             {
                 try
                 {
@@ -122,8 +134,8 @@ namespace Pz_Proj_11_12.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["DayId"] = new SelectList(_context.Days, "Id", "Id", meeting.DayId);
-            ViewData["PriorityId"] = new SelectList(_context.Priorities, "Id", "Id", meeting.PriorityId);
+            ViewData["DayId"] = new SelectList(_context.Days, "Id", "Name", meeting.DayId);
+            ViewData["PriorityId"] = new SelectList(_context.Priorities, "Id", "Name", meeting.PriorityId);
             return View(meeting);
         }
 

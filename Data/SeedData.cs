@@ -20,9 +20,9 @@ namespace Pz_Proj_11_12.Data
                 if (!context.Priorities.Any())
                 {
                     context.Priorities.AddRange(
-                        new Priority { Name = "High" },
+                        new Priority { Name = "Low" },
                         new Priority { Name = "Medium" },
-                        new Priority { Name = "Low" }
+                        new Priority { Name = "High" }
                     );
                     context.SaveChanges();
                 }
@@ -30,9 +30,9 @@ namespace Pz_Proj_11_12.Data
                 if (!context.Difficulties.Any())
                 {
                     context.Difficulties.AddRange(
-                        new Difficulty { Name = "Hard" },
+                        new Difficulty { Name = "Low" },
                         new Difficulty { Name = "Medium" },
-                        new Difficulty { Name = "Low" }
+                        new Difficulty { Name = "Hard" }
                     );
                     context.SaveChanges();
                 }
@@ -41,8 +41,8 @@ namespace Pz_Proj_11_12.Data
                 {
                     context.Statuses.AddRange(
                         new Status { Name = "Created" },
-                        new Status { Name = "Finished" },
-                        new Status { Name = "In_Progress" }
+                        new Status { Name = "In_Progress" },
+                        new Status { Name = "Finished" }
                     );
                     context.SaveChanges();
                 }
@@ -61,7 +61,7 @@ namespace Pz_Proj_11_12.Data
                     context.Planners.Add(planner);
                     context.SaveChanges();
 
-                    string[] dayNames = { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" };
+                    string[] dayNames = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 
                     for (int i = 0; i < 7; i++)
                     {

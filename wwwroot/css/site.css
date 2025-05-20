@@ -20,3 +20,69 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.card {
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    background-color: #f9f9f9;
+}
+
+.finished-task {
+    opacity: 0.5;
+    text-decoration: line-through;
+    background-color: #eee;
+}
+
+.badge {
+    font-size: 0.75rem;
+    padding: 0.4em 0.6em;
+    margin-right: 4px;
+    border-radius: 5px;
+}
+
+.priority-high {
+    background-color: crimson;
+    color: white;
+}
+
+.priority-medium {
+    background-color: goldenrod;
+    color: white;
+}
+
+.priority-low {
+    background-color: forestgreen;
+    color: white;
+}
+
+.difficulty-hard {
+    background-color: darkred;
+    color: white;
+}
+
+.difficulty-medium {
+    background-color: darkorange;
+    color: white;
+}
+
+.difficulty-low {
+    background-color: seagreen;
+    color: white;
+}
+
+.status-created {
+    background-color: cornflowerblue;
+    color: white;
+}
+
+.status-in_progress {
+    background-color: forestgreen;
+    color: white;
+}
+
+.status-finished {
+    background-color: gray;
+    color: white;
+}
+
+

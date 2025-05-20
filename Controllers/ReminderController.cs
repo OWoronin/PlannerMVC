@@ -29,8 +29,8 @@ namespace Pz_Proj_11_12.Controllers
         // GET: Reminder/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
-            {
+            if (id == null)			
+			{
                 return NotFound();
             }
 
@@ -46,10 +46,17 @@ namespace Pz_Proj_11_12.Controllers
         }
 
         // GET: Reminder/Create
-        public IActionResult Create()
+        public IActionResult Create(int? dayId)
         {
-            ViewData["DayId"] = new SelectList(_context.Days, "Id", "Id");
-            return View();
+            int day = dayId ?? 0;
+
+            var reminder = new Reminder
+            {
+                DayId = day
+            }; 
+
+            ViewData["DayId"] = new SelectList(_context.Days, "Id", "Name", day);
+            return View(reminder);
         }
 
         // POST: Reminder/Create
@@ -57,15 +64,18 @@ namespace Pz_Proj_11_12.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Description,CreatedDate,ReminderTime,DayId")] Reminder reminder)
+        public async Task<IActionResult> Create([Bind("Id,Name,Description,ReminderTime,DayId")] Reminder reminder)
         {
+            ModelState.Remove("CreatedDate");
+
             if (ModelState.IsValid)
             {
+                reminder.CreatedDate = DateTime.Now;
                 _context.Add(reminder);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["DayId"] = new SelectList(_context.Days, "Id", "Id", reminder.DayId);
+            ViewData["DayId"] = new SelectList(_context.Days, "Id", "Name", reminder.DayId);
             return View(reminder);
         }
 
@@ -82,7 +92,7 @@ namespace Pz_Proj_11_12.Controllers
             {
                 return NotFound();
             }
-            ViewData["DayId"] = new SelectList(_context.Days, "Id", "Id", reminder.DayId);
+            ViewData["DayId"] = new SelectList(_context.Days, "Id", "Name", reminder.DayId);
             return View(reminder);
         }
 
@@ -91,12 +101,14 @@ namespace Pz_Proj_11_12.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,CreatedDate,ReminderTime,DayId")] Reminder reminder)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,ReminderTime,DayId")] Reminder reminder)
         {
             if (id != reminder.Id)
             {
                 return NotFound();
             }
+
+            ModelState.Remove("CreatedDate");
 
             if (ModelState.IsValid)
             {
@@ -118,7 +130,7 @@ namespace Pz_Proj_11_12.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["DayId"] = new SelectList(_context.Days, "Id", "Id", reminder.DayId);
+            ViewData["DayId"] = new SelectList(_context.Days, "Id", "Name", reminder.DayId);
             return View(reminder);
         }
 
