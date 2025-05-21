@@ -28,10 +28,32 @@ namespace Pz_Proj_11_12.Controllers
             return View(planner);
         }
 
-        public IActionResult Privacy()
+
+        //i have to copy this code from task controller ;_; 
+        public async Task<IActionResult> Complete(int id)
         {
-            return View();
+            var taskModel = await _context.Tasks.FindAsync(id);
+            if (taskModel != null)
+            {
+                var taskStatus = await _context.Statuses.FindAsync(3);
+                if (taskStatus != null)
+                {
+                    taskModel.Status = taskStatus;
+                }
+                else
+                {
+                    return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+                }
+            }
+            else
+            {
+                return NotFound();
+            }
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
+
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

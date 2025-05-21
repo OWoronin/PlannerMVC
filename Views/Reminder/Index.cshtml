@@ -1,59 +1,50 @@
-﻿@model IEnumerable<Pz_Proj_11_12.Models.Reminder>
+﻿@model Pz_Proj_11_12.Models.Planner
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Reminders";
 }
 
-<h1>Index</h1>
+<h2 class="mb-4">Reminder Schedule</h2>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CreatedDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ReminderTime)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Day)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreatedDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ReminderTime)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Day.Name)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<div class="planner-table">
+    <table class="table text-center table-bordered">
+        <thead>
+            <tr>
+                @foreach (var day in Model.Days)
+                {
+                    <th>@day.Name</th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                @foreach (var day in Model.Days)
+                {
+                    <td> 
+                        <div class="section">
+                            @foreach (var reminder in day.Reminders)
+                            {
+                                <div class="card p-2 mb-2" >
+                                    <a asp-action="Details" asp-controller="Reminder" asp-route-id="@reminder.Id">
+                                        <div><strong>@reminder.Name</strong></div>
+                                        <div class="mt-1">
+                                            <span class="text-muted small">@reminder.ReminderTime</span>
+                                        </div>
+                                    </a>
+                                   
+                                    <div class="mt-2">
+                                        <a class="btn btn-sm btn-outline-secondary" asp-action="Edit" asp-route-id="@reminder.Id">Edit</a>
+                                        <a class="btn btn-sm btn-outline-danger" asp-action="Delete" asp-route-id="@reminder.Id">Delete</a>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                        <div class="mt-2">
+                            <a asp-action="Create" asp-route-dayId="@day.Id" class="btn btn-sm btn-outline-secondary">Add Reminder</a>
+                        </div>
+                    </td>
+                }
+            </tr>
+        </tbody>
+    </table>
+</div>

@@ -22,8 +22,11 @@ namespace Pz_Proj_11_12.Controllers
         // GET: Task
         public async Task<IActionResult> Index()
         {
-            var plannerContext = _context.Tasks.Include(t => t.Day).Include(t => t.Difficulty).Include(t => t.Priority).Include(t => t.Status);
-            return View(await plannerContext.ToListAsync());
+
+            var plannerContext = _context.Planners.Include(p => p.Days).ThenInclude(d => d.Tasks).ThenInclude(t => t.Status)
+                .Include(p => p.Days).ThenInclude(d => d.Tasks).ThenInclude(t => t.Priority)
+                .Include(p => p.Days).ThenInclude(d => d.Tasks).ThenInclude(t => t.Difficulty).First();
+            return View(plannerContext);
         }
 
         // GET: Task/Details/5
@@ -193,5 +196,30 @@ namespace Pz_Proj_11_12.Controllers
         {
             return _context.Tasks.Any(e => e.Id == id);
         }
+
+        public async Task<IActionResult> Complete(int id)
+        {
+            var taskModel = await _context.Tasks.FindAsync(id);
+            if (taskModel != null)
+            {
+                var taskStatus = await _context.Statuses.FindAsync(3);
+                if (taskStatus != null)
+                {
+                    taskModel.Status = taskStatus;
+                }
+                else
+                {
+                    return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+                }
+            }
+            else
+            {
+                return NotFound();
+            }
+          
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+            
     }
 }

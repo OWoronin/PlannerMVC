@@ -1,72 +1,62 @@
-﻿@model IEnumerable<Pz_Proj_11_12.Models.TaskModel>
+﻿@model Pz_Proj_11_12.Models.Planner
 
 @{
-	ViewData["Title"] = "Index";
+    ViewData["Title"] = "Tasks Overview";
 }
 
-<h1>Index</h1>
+<div class="planner-table">
+    <table class="table text-center table-bordered">
+        <thead>
+            <tr>
+                @foreach (var day in Model.Days)
+                {
+                    <th>@day.Name</th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                @foreach (var day in Model.Days)
+                {
+                    <td>
+                        <div class="section">
+                            @foreach (var task in day.Tasks)
+                            {
+                                var priorityClass = $"priority-{task.Priority.Name.ToLower()}";
+                                var difficultyClass = $"difficulty-{task.Difficulty.Name.ToLower()}";
+                                var statusClass = $"status-{task.Status.Name.ToLower()}";
+                                var cardClass = "card p-2 mb-2";
+                                if (task.Status.Name == "Finished") cardClass += " finished-task";
 
-<p>
-	<a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-	<thead>
-		<tr>
-			<th>
-				@Html.DisplayNameFor(model => model.Name)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.Description)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.Difficulty)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.Priority)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.Status)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.CreatedDate)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.Day)
-			</th>
-			<th></th>
-		</tr>
-	</thead>
-	<tbody>
-		@foreach (var item in Model)
-		{
-			<tr>
-				<td>
-					@Html.DisplayFor(modelItem => item.Name)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => item.Description)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => item.Difficulty.Name)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => item.Priority.Name)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => item.Status.Name)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => item.CreatedDate)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => item.Day.Name)
-				</td>
-				<td>
-					<a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-					<a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-					<a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-				</td>
-			</tr>
-		}
-	</tbody>
-</table>
+                                <div class="@cardClass">
+                                    <a asp-action="Details" asp-controller="Task" asp-route-id="@task.Id">
+                                        <div><strong>@task.Name</strong></div>
+
+                                        <div class="mt-1">
+                                            <span class="badge @priorityClass">@task.Priority.Name</span>
+                                            <span class="badge @statusClass">@task.Status.Name</span>
+                                            <span class="badge @difficultyClass">@task.Difficulty.Name</span>
+                                        </div>
+                                    </a>
+                                   
+                                    <div class="mt-2">
+                                        <a class="btn btn-sm btn-outline-secondary" asp-action="Edit" asp-route-id="@task.Id">Edit</a>
+                                        <a class="btn btn-sm btn-outline-danger" asp-action="Delete" asp-route-id="@task.Id">Delete</a>
+                                        <a class="btn btn-sm btn-outline-danger" asp-action="Complete" asp-route-id="@task.Id">Complete</a>
+                                    
+                                    </div>
+                                </div>
+                            }
+                        </div>
+
+                        <div class="mt-2">
+                            <a class="btn btn-sm btn-outline-primary" asp-controller="Task" asp-action="Create" asp-route-dayId="@day.Id">Add Task
+                            </a>
+                        </div>
+                    </td>
+                }
+            </tr>
+        </tbody>
+    </table>
+</div>
+

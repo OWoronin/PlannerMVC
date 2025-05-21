@@ -23,8 +23,8 @@ namespace Pz_Proj_11_12.Controllers
         // GET: Meeting
         public async Task<IActionResult> Index()
         {
-            var plannerContext = _context.Meetings.Include(m => m.Day).Include(m => m.Priority);
-            return View(await plannerContext.ToListAsync());
+            var plannerContext = _context.Planners.Include(p => p.Days).ThenInclude(d => d.Meetings).ThenInclude(t => t.Priority).First();
+            return View(plannerContext);
         }
 
         // GET: Meeting/Details/5

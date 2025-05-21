@@ -22,8 +22,8 @@ namespace Pz_Proj_11_12.Controllers
         // GET: Reminder
         public async Task<IActionResult> Index()
         {
-            var plannerContext = _context.Reminders.Include(r => r.Day);
-            return View(await plannerContext.ToListAsync());
+            var plannerContext = _context.Planners.Include(p => p.Days).ThenInclude(d => d.Reminders).First();
+            return View(plannerContext);
         }
 
         // GET: Reminder/Details/5

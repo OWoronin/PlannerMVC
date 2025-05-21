@@ -26,14 +26,16 @@
                                 var statusClass = $"status-{task.Status.Name.ToLower()}";
                                 var cardClass = "card p-2 mb-2";
                                 if (task.Status.Name == "Finished") cardClass += " finished-task";
-
                                 <div class="@cardClass">
-                                    <div><strong>@task.Name</strong></div>
-                                    <div class="mt-1">
-                                        <span class="badge @priorityClass">@task.Priority.Name</span>
-                                        <span class="badge @statusClass">@task.Status.Name</span>
-                                        <span class="badge @difficultyClass">@task.Difficulty.Name</span>
-                                    </div>
+                                    <a asp-action="Details" asp-controller="Task" asp-route-id="@task.Id">
+                                        <div><strong>@task.Name</strong></div>
+                                        <div class="mt-1">
+                                            <span class="badge @priorityClass">@task.Priority.Name</span>
+                                            <span class="badge @statusClass">@task.Status.Name</span>
+                                            <span class="badge @difficultyClass">@task.Difficulty.Name</span>
+                                        </div>
+                                    </a>
+                                    <a class="btn btn-sm btn-outline-danger" asp-controller="Home" asp-action="Complete" asp-route-id="@task.Id">Complete</a>
                                 </div>
                             }
                         </div>
@@ -41,10 +43,10 @@
                         <div class="section">
                             @foreach (var reminder in day.Reminders)
                             {
-                                <div class="card p-2 mb-2">
+                                 <a class="card p-2 mb-2" asp-action="Details" asp-controller="Reminder" asp-route-id="@reminder.Id">
                                     <div><strong>@reminder.Name</strong></div>
                                     <div class="text-muted small">@reminder.ReminderTime</div>
-                                </div>
+                                </a>
                             }
                         </div>
 
@@ -52,13 +54,13 @@
                             @foreach (var meeting in day.Meetings)
                             {
                                 var priorityClass = $"priority-{meeting.Priority.Name.ToLower()}";
-                                <div class="card p-2 mb-2">
+                                <a class="card p-2 mb-2" asp-action="Details" asp-controller="Meeting" asp-route-id="@meeting.Id">
                                     <div><strong>@meeting.Name</strong></div>
                                     <div class="mt-1">
                                         <span class="badge @priorityClass">@meeting.Priority.Name</span>
                                         <span class="text-muted small">@meeting.StartTime</span>
                                     </div>
-                                </div>
+                                </a>
                             }
                         </div>
                         <div class="mt-2">
