@@ -1,0 +1,74 @@
+﻿@model Pz_Proj_11_12.ViewModels.Search.SearchResultViewModel
+
+@{
+    ViewData["Title"] = "Search";
+}
+
+<div class="search-container">
+    <form method="get" asp-action="Index" class="search-form">
+        <input type="text"
+               name="searchQuery"
+               value="@Model.SearchQuery"
+               placeholder="name"
+               class="search-input" />
+        <input type="hidden" name="sortColumn" value="@Model.SortColumn" />
+        <input type="hidden" name="sortDirection" value="@Model.SortDirection" />
+        <button type="submit" class="search-button">Search</button>
+    </form>
+</div>
+
+<table class="results-table">
+    <thead>
+        <tr>
+            <th>
+                <a asp-route-sortColumn="Name"
+                   asp-route-sortDirection="@(Model.SortColumn == "Name" && Model.SortDirection == "asc" ? "desc" : "asc")"
+                   asp-route-searchQuery="@Model.SearchQuery"
+                   asp-route-page="1">
+                    Name @(Model.SortColumn == "Name" ? (Model.SortDirection == "asc" ? "↑" : "↓") : "")
+                </a>
+            </th>
+            <th>
+                <a asp-route-sortColumn="CreateDate"
+                   asp-route-sortDirection="@(Model.SortColumn == "CreateDate" && Model.SortDirection == "asc" ? "desc" : "asc")"
+                   asp-route-searchQuery="@Model.SearchQuery"
+                   asp-route-page="1">
+                    Created Date @(Model.SortColumn == "CreateDate" ? (Model.SortDirection == "asc" ? "↑" : "↓") : "")
+                </a>
+            </th>
+            <th>Type</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Results)
+        {
+            <tr>
+                <td>@item.Name</td>
+                <td>@item.CreatedDate.ToString("yyyy-MM-dd")</td>
+                <td>@item.Type</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div class="pagination-container">
+    @if (Model.Results.previousPage)
+    {
+        <a asp-route-page="@(Model.Results.PageId - 1)"
+           asp-route-searchQuery="@Model.SearchQuery"
+           asp-route-sortColumn="@Model.SortColumn"
+           asp-route-sortDirection="@Model.SortDirection"
+           class="pagination-link">&laquo; Previous</a>
+    }
+
+    <span class="pagination-info">Page @Model.Results.PageId of @Model.Results.PagesTotal</span>
+
+    @if (Model.Results.nextPage)
+    {
+        <a asp-route-page="@(Model.Results.PageId + 1)"
+           asp-route-searchQuery="@Model.SearchQuery"
+           asp-route-sortColumn="@Model.SortColumn"
+           asp-route-sortDirection="@Model.SortDirection"
+           class="pagination-link">Next &raquo;</a>
+    }
+</div>

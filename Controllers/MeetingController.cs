@@ -69,6 +69,9 @@ namespace Pz_Proj_11_12.Controllers
         public async Task<IActionResult> Create([Bind("Id,Name,Description,PriorityId, Location,StartTime,EndTime,DayId")] Meeting meeting)
         {
             ModelState.Remove("CreatedDate");
+            ModelState.Remove("Day");
+            ModelState.Remove("Priority");
+           
 
             if (ModelState.IsValid)
             {
@@ -105,7 +108,7 @@ namespace Pz_Proj_11_12.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,PriorityId,CreatedDate,Location,StartTime,EndTime,DayId")] Meeting meeting)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,PriorityId,Location,StartTime,EndTime,DayId")] Meeting meeting)
         {
             if (id != meeting.Id)
             {
@@ -113,11 +116,14 @@ namespace Pz_Proj_11_12.Controllers
             }
 
 			ModelState.Remove("CreatedDate");
+            ModelState.Remove("Day");
+            ModelState.Remove("Priority");
 
-			if (ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 try
                 {
+                    meeting.CreatedDate = _context.Meetings.AsNoTracking().First(f=>f.Id == id).CreatedDate; 
                     _context.Update(meeting);
                     await _context.SaveChangesAsync();
                 }

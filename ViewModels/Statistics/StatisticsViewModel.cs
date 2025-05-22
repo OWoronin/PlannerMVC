@@ -1,4 +1,4 @@
-﻿namespace Pz_Proj_11_12.ViewModels
+﻿namespace Pz_Proj_11_12.ViewModels.Statistics
 {
     public class StatisticsViewModel
     {
@@ -14,7 +14,7 @@
         public List<DifficultyViewModel> Difficulties { get; set; }
         public List<LocationViewModel> Locations { get; set; }
         public List<PriorityViewModel> Priorities { get; set; }
-        public List<StatusViewModel> Statuses { get; set; }   
+        public List<StatusViewModel> Statuses { get; set; }
 
 
 

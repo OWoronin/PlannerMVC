@@ -1,0 +1,117 @@
+﻿@model Pz_Proj_11_12.ViewModels.Statistics.StatisticsViewModel; 
+@{
+	ViewData["Title"] = "Statistics";
+}
+
+<style>
+
+    h1, h2 {
+        color: #333;
+    }
+
+    .stats-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 40px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .stats-table th, .stats-table td {
+        border: 1px solid #ddd;
+        padding: 12px 16px;
+        text-align: left;
+    }
+
+    .stats-table th {
+        background-color: #f5f5f5;
+        color: #444;
+        font-weight: 600;
+    }
+
+    .stats-table tr:nth-child(even) {
+        background-color: #fafafa;
+    }
+
+    .stats-table tr:hover {
+        background-color: #f1f1f1;
+    }
+</style>
+
+<h1>Statistics</h1>
+
+<h2>General Statistics</h2>
+<table class="stats-table">
+    <tr><th>Total Tasks</th><td>@Model.amountOfTasks</td></tr>
+    <tr><th>Total Meetings</th><td>@Model.amountOfMeetings</td></tr>
+    <tr><th>Total Reminders</th><td>@Model.amountOfReminders</td></tr>
+    <tr><th>Reminders Before 12 PM</th><td>@Model.amountOfRemindersBefore12</td></tr>
+    <tr><th>Reminders After 12 PM</th><td>@Model.amountOfRemindersAfter12</td></tr>
+    <tr><th>Meetings Before 12 PM</th><td>@Model.amountOfMeetingsBefore12</td></tr>
+    <tr><th>Meetings After 12 PM</th><td>@Model.amountOfMeetingsAfter12</td></tr>
+</table>
+
+<h2>Tasks by Day</h2>
+<table class="stats-table">
+    <tr><th>Day</th><th>Tasks</th><th>Meetings</th><th>Reminders</th></tr>
+    @foreach (var day in Model.Days)
+    {
+        <tr>
+            <td>@day.Name</td>
+            <td>@day.amountOfTasks</td>
+            <td>@day.amountOfMeetings</td>
+            <td>@day.amountOfReminders</td>
+        </tr>
+    }
+</table>
+
+<h2>Tasks by Difficulty</h2>
+<table class="stats-table">
+    <tr><th>Difficulty</th><th>Tasks</th></tr>
+    @foreach (var d in Model.Difficulties)
+    {
+        <tr>
+            <td>@d.Name</td>
+            <td>@d.amountOfTasks</td>
+        </tr>
+    }
+</table>
+
+<h2>Meetings by Location</h2>
+<table class="stats-table">
+    <tr><th>Location</th><th>Meetings</th></tr>
+    @foreach (var loc in Model.Locations)
+    {
+        <tr>
+            <td>@loc.Name</td>
+            <td>@loc.amountOfMeetings</td>
+        </tr>
+    }
+</table>
+
+<h2>Tasks and Meetings by Priority</h2>
+<table class="stats-table">
+    <tr><th>Priority</th><th>Tasks</th><th>Meetings</th></tr>
+    @foreach (var p in Model.Priorities)
+    {
+        <tr>
+            <td>@p.Name</td>
+            <td>@p.amountOfTasks</td>
+            <td>@p.amountOfMeetings</td>
+        </tr>
+    }
+</table>
+
+<h2>Tasks by Status</h2>
+<table class="stats-table">
+    <tr><th>Status</th><th>Tasks</th></tr>
+    @foreach (var s in Model.Statuses)
+    {
+        <tr>
+            <td>@s.Name</td>
+            <td>@s.amountOfTasks</td>
+        </tr>
+    }
+</table>
+
+
+

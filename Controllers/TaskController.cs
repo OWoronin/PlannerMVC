@@ -77,7 +77,11 @@ namespace Pz_Proj_11_12.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,Description,DifficultyId,PriorityId,StatusId,DayId")] TaskModel taskModel)
         {
-            ModelState.Remove("CreatedDate"); 
+            ModelState.Remove("CreatedDate");
+            ModelState.Remove("Day");
+            ModelState.Remove("Status");
+            ModelState.Remove("Priority");
+            ModelState.Remove("Difficulty");
 
             if (ModelState.IsValid)
             {
@@ -127,11 +131,18 @@ namespace Pz_Proj_11_12.Controllers
             }
 
             ModelState.Remove("CreatedDate");
+            ModelState.Remove("Day");
+            ModelState.Remove("Status");
+            ModelState.Remove("Priority");
+            ModelState.Remove("Difficulty");
+
+
 
             if (ModelState.IsValid)
             {
                 try
                 {
+                    taskModel.CreatedDate = _context.Tasks.AsNoTracking().First(f=>f.Id == id).CreatedDate;
                     _context.Update(taskModel);
                     await _context.SaveChangesAsync();
                 }

@@ -67,6 +67,8 @@ namespace Pz_Proj_11_12.Controllers
         public async Task<IActionResult> Create([Bind("Id,Name,Description,ReminderTime,DayId")] Reminder reminder)
         {
             ModelState.Remove("CreatedDate");
+            ModelState.Remove("Day");
+           
 
             if (ModelState.IsValid)
             {
@@ -109,11 +111,14 @@ namespace Pz_Proj_11_12.Controllers
             }
 
             ModelState.Remove("CreatedDate");
+            ModelState.Remove("Day");
+           
 
             if (ModelState.IsValid)
             {
                 try
                 {
+                    reminder.CreatedDate = _context.Reminders.AsNoTracking().First(f=>f.Id == id).CreatedDate;
                     _context.Update(reminder);
                     await _context.SaveChangesAsync();
                 }
