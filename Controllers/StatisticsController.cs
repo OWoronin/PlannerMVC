@@ -23,14 +23,13 @@ namespace Pz_Proj_11_12.Controllers
             sVM.amountOfTasks = _context.Tasks.Where(t => daysId.Contains(t.DayId)).Count();
             sVM.amountOfMeetings = _context.Meetings.Where(m => daysId.Contains(m.DayId)).Count();
             sVM.amountOfReminders = _context.Reminders.Where(r => daysId.Contains(r.DayId)).Count();
-            //before and after 12 
             sVM.amountOfRemindersBefore12 = _context.Reminders.Where(r => daysId.Contains(r.DayId) && r.ReminderTime.Hour <= 12).Count();
             sVM.amountOfRemindersAfter12 = _context.Reminders.Where(r => daysId.Contains(r.DayId) && r.ReminderTime.Hour > 12).Count();
 
             sVM.amountOfMeetingsBefore12 = _context.Meetings.Where(r => daysId.Contains(r.DayId) && r.StartTime.Hour <= 12).Count();
             sVM.amountOfMeetingsAfter12 = _context.Meetings.Where(r => daysId.Contains(r.DayId) && r.StartTime.Hour > 12).Count();
 
-            //by days 
+    
             var daysVM = new List<DayViewModel>(7); 
             foreach(var id in daysId)
             {
@@ -81,8 +80,6 @@ namespace Pz_Proj_11_12.Controllers
 			}
 			sVM.Statuses = statusVM;
 
-
-			//
 			var locations = _context.Meetings.Select(m => m.Location).ToHashSet();
             var locationsVM = new List<LocationViewModel>(locations.Count());
             foreach (var location in locations)
@@ -93,8 +90,6 @@ namespace Pz_Proj_11_12.Controllers
                locationsVM.Add(locVM);
             }
             sVM.Locations = locationsVM;
-
-
 
             return View(sVM);
         }

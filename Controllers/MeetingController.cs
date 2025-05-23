@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Pz_Proj_11_12.Data;
 using Pz_Proj_11_12.Models;
+using Pz_Proj_11_12.Utils;
 
 
 namespace Pz_Proj_11_12.Controllers
@@ -20,7 +22,7 @@ namespace Pz_Proj_11_12.Controllers
             _context = context;
         }
 
-        // GET: Meeting
+
         public async Task<IActionResult> Index()
         {
             var plannerContext = _context.Planners.Include(p => p.Days).ThenInclude(d => d.Meetings).ThenInclude(t => t.Priority).First();
@@ -30,6 +32,19 @@ namespace Pz_Proj_11_12.Controllers
         // GET: Meeting/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            string referrer = Request.Headers.Referer.ToString();
+
+            var isFromHome = RequestUtils.IsFromHomeController(referrer);
+
+            if (isFromHome)
+            {
+                TempData["Back"] = "Home";
+            }
+            else
+            {
+                TempData["Back"] = "Meeting";
+            }
+
             if (id == null)
             {
                 return NotFound();
@@ -56,14 +71,15 @@ namespace Pz_Proj_11_12.Controllers
             {
                 DayId = day
             };
+
             ViewData["DayId"] = new SelectList(_context.Days, "Id", "Name", day);
             ViewData["PriorityId"] = new SelectList(_context.Priorities, "Id", "Name");
             return View(meeting);
+
         }
 
-        // POST: Meeting/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+      
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,Description,PriorityId, Location,StartTime,EndTime,DayId")] Meeting meeting)
@@ -71,7 +87,12 @@ namespace Pz_Proj_11_12.Controllers
             ModelState.Remove("CreatedDate");
             ModelState.Remove("Day");
             ModelState.Remove("Priority");
-           
+
+            if (meeting.EndTime <= meeting.StartTime)
+            {
+                ModelState.AddModelError("EndTime", "The end time cannot be earlier than the start time.");
+            }
+
 
             if (ModelState.IsValid)
             {
@@ -103,9 +124,7 @@ namespace Pz_Proj_11_12.Controllers
             return View(meeting);
         }
 
-        // POST: Meeting/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+       
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,PriorityId,Location,StartTime,EndTime,DayId")] Meeting meeting)
@@ -118,6 +137,13 @@ namespace Pz_Proj_11_12.Controllers
 			ModelState.Remove("CreatedDate");
             ModelState.Remove("Day");
             ModelState.Remove("Priority");
+
+            if (meeting.EndTime <= meeting.StartTime)
+            {
+                ModelState.AddModelError("EndTime", "The end time cannot be earlier than the start time.");
+            }
+
+
 
             if (ModelState.IsValid)
             {
@@ -165,7 +191,7 @@ namespace Pz_Proj_11_12.Controllers
             return View(meeting);
         }
 
-        // POST: Meeting/Delete/5
+     
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

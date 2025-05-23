@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Pz_Proj_11_12.Data;
 using Pz_Proj_11_12.Models;
+using Pz_Proj_11_12.Utils;
 
 namespace Pz_Proj_11_12.Controllers
 {
@@ -19,7 +20,6 @@ namespace Pz_Proj_11_12.Controllers
             _context = context;
         }
 
-        // GET: Reminder
         public async Task<IActionResult> Index()
         {
             var plannerContext = _context.Planners.Include(p => p.Days).ThenInclude(d => d.Reminders).First();
@@ -29,6 +29,19 @@ namespace Pz_Proj_11_12.Controllers
         // GET: Reminder/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            string referrer = Request.Headers.Referer.ToString();
+
+            var isFromHome = RequestUtils.IsFromHomeController(referrer);
+
+            if (isFromHome)
+            {
+                TempData["Back"] = "Home";
+            }
+            else
+            {
+                TempData["Back"] = "Reminder";
+            }
+
             if (id == null)			
 			{
                 return NotFound();
@@ -59,9 +72,7 @@ namespace Pz_Proj_11_12.Controllers
             return View(reminder);
         }
 
-        // POST: Reminder/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,Description,ReminderTime,DayId")] Reminder reminder)
@@ -98,9 +109,7 @@ namespace Pz_Proj_11_12.Controllers
             return View(reminder);
         }
 
-        // POST: Reminder/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,ReminderTime,DayId")] Reminder reminder)
@@ -139,7 +148,7 @@ namespace Pz_Proj_11_12.Controllers
             return View(reminder);
         }
 
-        // GET: Reminder/Delete/5
+
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -158,7 +167,7 @@ namespace Pz_Proj_11_12.Controllers
             return View(reminder);
         }
 
-        // POST: Reminder/Delete/5
+
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

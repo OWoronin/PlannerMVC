@@ -1,8 +1,10 @@
 ﻿@model Pz_Proj_11_12.Models.Planner
 
 @{
-    ViewData["Title"] = "Tasks Overview";
+    ViewData["Title"] = "Tasks";
 }
+
+<h2 class="mb-4">Tasks</h2>
 
 <div class="planner-table">
     <table class="table text-center table-bordered">
@@ -22,35 +24,52 @@
                         <div class="section">
                             @foreach (var task in day.Tasks)
                             {
-                                var priorityClass = $"priority-{task.Priority.Name.ToLower()}";
+                                var priority = task.Priority.Name.ToLower();
+                                var priorityTitle = "Priority: Low";
+                                var starIcon = "far fa-star";
+                                if (priority == "medium")
+                                {
+                                    starIcon = "fas fa-star-half-alt";
+                                    priorityTitle = "Priority: Medium";
+                                }
+                                else if (priority == "high")
+                                {
+                                    starIcon = "fas fa-star";
+                                    priorityTitle = "Priority: High";
+                                }
+
                                 var difficultyClass = $"difficulty-{task.Difficulty.Name.ToLower()}";
                                 var statusClass = $"status-{task.Status.Name.ToLower()}";
-                                var cardClass = "card p-2 mb-2";
+                                var cardClass = "card p-2 mb-2 " + statusClass;
                                 if (task.Status.Name == "Finished") cardClass += " finished-task";
-
-                                <div class="@cardClass">
+                                <div class="@cardClass" style="position:relative;">
+                                    <span class="priority-stars-corner" title="@priorityTitle">
+                                        <i class="@starIcon"></i>
+                                    </span>
                                     <a asp-action="Details" asp-controller="Task" asp-route-id="@task.Id">
-                                        <div><strong>@task.Name</strong></div>
-
+                                        <div>
+                                            <strong>@task.Name</strong>
+                                        </div>
                                         <div class="mt-1">
-                                            <span class="badge @priorityClass">@task.Priority.Name</span>
-                                            <span class="badge @statusClass">@task.Status.Name</span>
                                             <span class="badge @difficultyClass">@task.Difficulty.Name</span>
                                         </div>
                                     </a>
-                                   
                                     <div class="mt-2">
-                                        <a class="btn btn-sm btn-outline-secondary" asp-action="Edit" asp-route-id="@task.Id">Edit</a>
-                                        <a class="btn btn-sm btn-outline-danger" asp-action="Delete" asp-route-id="@task.Id">Delete</a>
-                                        <a class="btn btn-sm btn-outline-danger" asp-action="Complete" asp-route-id="@task.Id">Complete</a>
-                                    
+                                        <a class="btn btn-sm edit-outline action-btn" asp-action="Edit" asp-route-id="@task.Id">Edit</a>
+                                        <a class="btn btn-sm delete-outline action-btn" asp-action="Delete" asp-route-id="@task.Id">Delete</a>
+                                        @if(task.Status.Name != "Finished")
+                                        {
+                                            <a class="btn btn-sm add-outline action-btn" asp-action="Complete" asp-route-id="@task.Id">Complete</a>
+                                        }
+                                        
                                     </div>
                                 </div>
                             }
                         </div>
 
                         <div class="mt-2">
-                            <a class="btn btn-sm btn-outline-primary" asp-controller="Task" asp-action="Create" asp-route-dayId="@day.Id">Add Task
+                            <a class="btn btn-sm add-outline action-btn" asp-controller="Task" asp-action="Create" asp-route-dayId="@day.Id">
+                                Add Task
                             </a>
                         </div>
                     </td>
@@ -59,4 +78,3 @@
         </tbody>
     </table>
 </div>
-

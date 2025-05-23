@@ -1,4 +1,5 @@
 ﻿using Pz_Proj_11_12.Models.LookupTables;
+using System.ComponentModel.DataAnnotations;
 
 namespace Pz_Proj_11_12.Models
 {
@@ -14,7 +15,7 @@ namespace Pz_Proj_11_12.Models
         public TimeOnly StartTime { get; set; }
         public TimeOnly EndTime { get; set; }
 
-        //in final project will add option to add reminder for meeting in meeting view 
+        //in final project I will add option to add reminder for meeting in meeting view 
         public int DayId { get; set; }
         public Day Day { get; set; } = null!;
 

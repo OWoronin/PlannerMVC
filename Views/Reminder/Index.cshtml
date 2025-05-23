@@ -4,7 +4,7 @@
     ViewData["Title"] = "Reminders";
 }
 
-<h2 class="mb-4">Reminder Schedule</h2>
+<h2 class="mb-4">Reminders</h2>
 
 <div class="planner-table">
     <table class="table text-center table-bordered">
@@ -33,14 +33,14 @@
                                     </a>
                                    
                                     <div class="mt-2">
-                                        <a class="btn btn-sm btn-outline-secondary" asp-action="Edit" asp-route-id="@reminder.Id">Edit</a>
-                                        <a class="btn btn-sm btn-outline-danger" asp-action="Delete" asp-route-id="@reminder.Id">Delete</a>
+                                        <a class="btn btn-sm edit-outline action-btn" asp-action="Edit" asp-route-id="@reminder.Id">Edit</a>
+                                        <a class="btn btn-sm delete-outline action-btn" asp-action="Delete" asp-route-id="@reminder.Id">Delete</a>
                                     </div>
                                 </div>
                             }
                         </div>
                         <div class="mt-2">
-                            <a asp-action="Create" asp-route-dayId="@day.Id" class="btn btn-sm btn-outline-secondary">Add Reminder</a>
+                            <a asp-action="Create" asp-route-dayId="@day.Id" class="btn btn-sm add-outline action-btn">Add Reminder</a>
                         </div>
                     </td>
                 }
@@ -48,3 +48,4 @@
         </tbody>
     </table>
 </div>
+

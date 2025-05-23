@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using Pz_Proj_11_12.Data;
 
 namespace Pz_Proj_11_12
@@ -11,7 +12,8 @@ namespace Pz_Proj_11_12
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
-            builder.Services.AddSqlServer<PlannerContext>(builder.Configuration.GetConnectionString("Connection")); 
+            builder.Services.AddSqlServer<PlannerContext>(builder.Configuration.GetConnectionString("Connection"),
+                options => options.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)); 
 
 
 

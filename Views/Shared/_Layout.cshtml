@@ -7,41 +7,52 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Pz_Proj_11_12.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-blue-custom border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Weekly Planner</a>
+                <a class="navbar-brand navbar-brand-custom" asp-area="" asp-controller="Home" asp-action="Index">
+                    Weekly Planner
+                </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        @*<li class="nav-item">    
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home Planner</a>
-                        </li>*@
+                    <ul class="navbar-nav flex-grow-1 nav-custom">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Task" asp-action="Index">Tasks</a>
+                            <a class="nav-link nav-link-custom text-white" asp-area="" asp-controller="Task" asp-action="Index">
+                                <i class="fas fa-tasks me-1"></i> Tasks
+                            </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Meeting" asp-action="Index">Meetings</a>
+                            <a class="nav-link nav-link-custom text-white" asp-area="" asp-controller="Meeting" asp-action="Index">
+                                <i class="fas fa-handshake me-1"></i> Meetings
+                            </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Reminder" asp-action="Index">Reminders</a>
+                            <a class="nav-link nav-link-custom text-white" asp-area="" asp-controller="Reminder" asp-action="Index">
+                                <i class="fas fa-bell me-1"></i> Reminders
+                            </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Statistics" asp-action="Index">Statistics</a>
+                            <a class="nav-link nav-link-custom text-white" asp-area="" asp-controller="Statistics" asp-action="Index">
+                                <i class="fas fa-chart-line me-1"></i> Statistics
+                            </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Search" asp-action="Index">Search</a>
+                            <a class="nav-link nav-link-custom text-white" asp-area="" asp-controller="Search" asp-action="Index">
+                                <i class="fas fa-search me-1"></i> Search
+                            </a>
                         </li>
                     </ul>
                 </div>
             </div>
         </nav>
     </header>
+
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()

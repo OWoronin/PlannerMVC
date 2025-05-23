@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Pz_Proj_11_12.Data;
 using Pz_Proj_11_12.Models;
+using Pz_Proj_11_12.Utils;
+using System.Web;
 
 namespace Pz_Proj_11_12.Controllers
 {
@@ -19,7 +21,6 @@ namespace Pz_Proj_11_12.Controllers
             _context = context;
         }
 
-        // GET: Task
         public async Task<IActionResult> Index()
         {
 
@@ -29,9 +30,22 @@ namespace Pz_Proj_11_12.Controllers
             return View(plannerContext);
         }
 
-        // GET: Task/Details/5
+
         public async Task<IActionResult> Details(int? id)
         {
+            string referrer = Request.Headers.Referer.ToString();
+
+            var isFromHome = RequestUtils.IsFromHomeController(referrer);
+
+            if (isFromHome)
+            {
+                TempData["Back"] = "Home";
+            }
+            else
+            {
+                TempData["Back"] = "Task";
+            } 
+
             if (id == null)
             {
                 return NotFound();
@@ -48,10 +62,12 @@ namespace Pz_Proj_11_12.Controllers
                 return NotFound();
             }
 
+
+
             return View(taskModel);
         }
 
-        // GET: Task/Create
+
         public IActionResult Create(int? dayId)
         {
             int day = dayId ?? 0;
@@ -70,9 +86,7 @@ namespace Pz_Proj_11_12.Controllers
         }
 
 
-        // POST: Task/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,Description,DifficultyId,PriorityId,StatusId,DayId")] TaskModel taskModel)
@@ -88,16 +102,19 @@ namespace Pz_Proj_11_12.Controllers
                 taskModel.CreatedDate = DateTime.Now;
                 _context.Add(taskModel);
                 await _context.SaveChangesAsync();
+                string referrer = Request.Headers.Referer.ToString();
+
                 return RedirectToAction(nameof(Index));
+                
             }
             ViewData["DayId"] = new SelectList(_context.Days, "Id", "Name", taskModel.DayId);
-            ViewData["DifficultyId"] = new SelectList(_context.Difficulties, "Id", "Name", taskModel.DifficultyId);     
+            ViewData["DifficultyId"] = new SelectList(_context.Difficulties, "Id", "Name", taskModel.DifficultyId);
             ViewData["PriorityId"] = new SelectList(_context.Priorities, "Id", "Name", taskModel.PriorityId);
             ViewData["StatusId"] = new SelectList(_context.Statuses, "Id", "Name", taskModel.StatusId);
             return View(taskModel);
         }
 
-        // GET: Task/Edit/5
+
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -117,9 +134,7 @@ namespace Pz_Proj_11_12.Controllers
             return View(taskModel);
         }
 
-        // POST: Task/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,DifficultyId,PriorityId,StatusId,DayId")] TaskModel taskModel)
@@ -142,7 +157,7 @@ namespace Pz_Proj_11_12.Controllers
             {
                 try
                 {
-                    taskModel.CreatedDate = _context.Tasks.AsNoTracking().First(f=>f.Id == id).CreatedDate;
+                    taskModel.CreatedDate = _context.Tasks.AsNoTracking().First(f => f.Id == id).CreatedDate;
                     _context.Update(taskModel);
                     await _context.SaveChangesAsync();
                 }
@@ -166,7 +181,7 @@ namespace Pz_Proj_11_12.Controllers
             return View(taskModel);
         }
 
-        // GET: Task/Delete/5
+
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -188,7 +203,7 @@ namespace Pz_Proj_11_12.Controllers
             return View(taskModel);
         }
 
-        // POST: Task/Delete/5
+
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -210,6 +225,19 @@ namespace Pz_Proj_11_12.Controllers
 
         public async Task<IActionResult> Complete(int id)
         {
+            string referrer = Request.Headers.Referer.ToString();
+
+            var isFromHome = RequestUtils.IsFromHomeController(referrer);
+
+            if (isFromHome)
+            {
+                TempData["Back"] = "Home";
+            }
+            else
+            {
+                TempData["Back"] = "Task";
+            }
+
             var taskModel = await _context.Tasks.FindAsync(id);
             if (taskModel != null)
             {
@@ -227,10 +255,10 @@ namespace Pz_Proj_11_12.Controllers
             {
                 return NotFound();
             }
-          
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-            
+
     }
 }

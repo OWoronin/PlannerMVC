@@ -4,71 +4,185 @@
     ViewData["Title"] = "Search";
 }
 
-<div class="search-container">
-    <form method="get" asp-action="Index" class="search-form">
+<h1 class="text-center mt-4 mb-4">Search</h1>
+
+<div class="d-flex justify-content-center">
+    <form method="get" asp-action="Index" class="search-form d-flex justify-content-center align-items-center">
         <input type="text"
                name="searchQuery"
                value="@Model.SearchQuery"
                placeholder="name"
-               class="search-input" />
+               class="search-input form-control" />
         <input type="hidden" name="sortColumn" value="@Model.SortColumn" />
         <input type="hidden" name="sortDirection" value="@Model.SortDirection" />
-        <button type="submit" class="search-button">Search</button>
+        <button type="submit" class="search-button btn d-flex align-items-center justify-content-center">
+            <i class="fas fa-search"></i>
+        </button>
     </form>
 </div>
 
-<table class="results-table">
-    <thead>
-        <tr>
-            <th>
-                <a asp-route-sortColumn="Name"
-                   asp-route-sortDirection="@(Model.SortColumn == "Name" && Model.SortDirection == "asc" ? "desc" : "asc")"
-                   asp-route-searchQuery="@Model.SearchQuery"
-                   asp-route-page="1">
-                    Name @(Model.SortColumn == "Name" ? (Model.SortDirection == "asc" ? "↑" : "↓") : "")
-                </a>
-            </th>
-            <th>
-                <a asp-route-sortColumn="CreateDate"
-                   asp-route-sortDirection="@(Model.SortColumn == "CreateDate" && Model.SortDirection == "asc" ? "desc" : "asc")"
-                   asp-route-searchQuery="@Model.SearchQuery"
-                   asp-route-page="1">
-                    Created Date @(Model.SortColumn == "CreateDate" ? (Model.SortDirection == "asc" ? "↑" : "↓") : "")
-                </a>
-            </th>
-            <th>Type</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model.Results)
-        {
+<div class="table-responsive">
+    <table class="results-table table mt-4">
+        <thead>
             <tr>
-                <td>@item.Name</td>
-                <td>@item.CreatedDate.ToString("yyyy-MM-dd")</td>
-                <td>@item.Type</td>
+                <th>
+                    <a asp-route-sortColumn="Name"
+                       asp-route-sortDirection="@(Model.SortColumn == "Name" && Model.SortDirection == "asc" ? "desc" : "asc")"
+                       asp-route-searchQuery="@Model.SearchQuery"
+                       asp-route-page="1">
+                        Name @(Model.SortColumn == "Name" ? (Model.SortDirection == "asc" ? "↑" : "↓") : "")
+                    </a>
+                </th>
+                <th>
+                    <a asp-route-sortColumn="CreateDate"
+                       asp-route-sortDirection="@(Model.SortColumn == "CreateDate" && Model.SortDirection == "asc" ? "desc" : "asc")"
+                       asp-route-searchQuery="@Model.SearchQuery"
+                       asp-route-page="1">
+                        Created Date @(Model.SortColumn == "CreateDate" ? (Model.SortDirection == "asc" ? "↑" : "↓") : "")
+                    </a>
+                </th>
+                <th>Type</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Results)
+            {
+                string controller = item.Type switch
+                {
+                    "Meeting" => "Meeting",
+                    "Task" => "Task",
+                    "Reminder" => "Reminder",
+                    _ => ""
+                };
 
-<div class="pagination-container">
-    @if (Model.Results.previousPage)
-    {
-        <a asp-route-page="@(Model.Results.PageId - 1)"
-           asp-route-searchQuery="@Model.SearchQuery"
-           asp-route-sortColumn="@Model.SortColumn"
-           asp-route-sortDirection="@Model.SortDirection"
-           class="pagination-link">&laquo; Previous</a>
-    }
-
-    <span class="pagination-info">Page @Model.Results.PageId of @Model.Results.PagesTotal</span>
-
-    @if (Model.Results.nextPage)
-    {
-        <a asp-route-page="@(Model.Results.PageId + 1)"
-           asp-route-searchQuery="@Model.SearchQuery"
-           asp-route-sortColumn="@Model.SortColumn"
-           asp-route-sortDirection="@Model.SortDirection"
-           class="pagination-link">Next &raquo;</a>
-    }
+                <tr onclick="location.href='@Url.Action("Details", controller, new { id = item.Id })'">
+                    <td>@item.Name</td>
+                    <td>@item.CreatedDate.ToString("yyyy-MM-dd")</td>
+                    <td>@item.Type</td>
+                </tr>
+            }
+        </tbody>
+    </table>
 </div>
+
+<div class="d-flex justify-content-center">
+    <div class="pagination-container d-flex align-items-center justify-content-center mt-3 mb-5">
+        @if (Model.Results.previousPage)
+        {
+            <a asp-route-page="@(Model.Results.PageId - 1)"
+               asp-route-searchQuery="@Model.SearchQuery"
+               asp-route-sortColumn="@Model.SortColumn"
+               asp-route-sortDirection="@Model.SortDirection"
+               class="pagination-link pagination-btn d-flex align-items-center justify-content-center me-2">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+        }
+        <span class="pagination-info mx-2">Page @Model.Results.PageId of @Model.Results.PagesTotal</span>
+        @if (Model.Results.nextPage)
+        {
+            <a asp-route-page="@(Model.Results.PageId + 1)"
+               asp-route-searchQuery="@Model.SearchQuery"
+               asp-route-sortColumn="@Model.SortColumn"
+               asp-route-sortDirection="@Model.SortDirection"
+               class="pagination-link pagination-btn d-flex align-items-center justify-content-center ms-2">
+                <i class="fas fa-arrow-right"></i>
+            </a>
+        }
+    </div>
+</div>
+
+<style>
+    .search-form {
+        width: 100%;
+        max-width: 470px;
+        gap: 10px;
+        margin-bottom: 0;
+    }
+
+    .search-input {
+        padding: 8px 14px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        font-size: 1rem;
+        min-width: 200px;
+        flex: 1 1 auto;
+    }
+
+    .search-button {
+        background-color: #4285f4;
+        color: #fff;
+        border-radius: 6px;
+        font-weight: 600;
+        border: none;
+        min-width: 48px;
+        min-height: 48px;
+        font-size: 1.3rem;
+        padding: 0;
+        transition: background 0.2s;
+    }
+
+        .search-button:active, .search-button:focus {
+            background-color: #357ae8;
+            color: #fff;
+        }
+
+    .results-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 40px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+        .results-table th, .results-table td {
+            border: 1px solid #ddd;
+            padding: 12px 16px;
+            text-align: left;
+        }
+
+        .results-table th {
+            background-color: #f5f5f5;
+            color: #444;
+            font-weight: 600;
+        }
+
+        .results-table tr:nth-child(even) {
+            background-color: #fafafa;
+        }
+
+        .results-table tr:hover {
+            background-color: #f1f1f1;
+            cursor: pointer;
+        }
+
+    .pagination-container {
+        gap: 18px;
+    }
+
+    .pagination-link.pagination-btn {
+        width: 48px;
+        height: 48px;
+        border: 2px solid #4285f4;
+        background: #fff;
+        color: #4285f4;
+        font-size: 1.4rem;
+        border-radius: 8px;
+        transition: background 0.2s, color 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+    }
+
+        .pagination-link.pagination-btn:active, .pagination-link.pagination-btn:focus, .pagination-link.pagination-btn:hover {
+            background: #4285f4;
+            color: #fff;
+        }
+
+    .pagination-info {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #333;
+        min-width: 32px;
+        text-align: center;
+    }
+</style>

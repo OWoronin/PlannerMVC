@@ -6,8 +6,5 @@
         public string Name { get; set; }
         public ICollection<Day> Days { get; set; } = new List<Day>();
 
-
-        
-
     }
 }
