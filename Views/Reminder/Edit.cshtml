@@ -1,58 +1,60 @@
 ﻿@model Pz_Proj_11_12.Models.Reminder
 
 @{
-    ViewData["Title"] = "Edit";
+	ViewData["Title"] = "Edit reminder";
 }
 
-<h1>Edit</h1>
-
+<h1>Edit reminder</h1>
 <hr />
 
-<form asp-action="Edit" class="edit-table-form">
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-    <input type="hidden" asp-for="Id" />
+<div class="my-form-card">
 
-    <table class="details-table">
-        <tr>
-            <th><label asp-for="Name" class="control-label"></label></th>
-            <td>
-                <input asp-for="Name" class="form-control details-input" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </td>
-        </tr>
-        <tr>
-            <th><label asp-for="Description" class="control-label"></label></th>
-            <td>
-                <input asp-for="Description" class="form-control details-input" />
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </td>
-        </tr>
-        <tr>
-            <th><label class="control-label">Reminder Time</label></th>
-            <td>
-                <input asp-for="ReminderTime" class="form-control details-input" />
-                <span asp-validation-for="ReminderTime" class="text-danger"></span>
-            </td>
-        </tr>
-        <tr>
-            <th><label class="control-label">Day of the week</label></th>
-            <td>
-                <select asp-for="DayId" class="form-control details-select" asp-items="ViewBag.DayId"></select>
-                <span asp-validation-for="DayId" class="text-danger"></span>
-            </td>
-        </tr>
-    </table>
+	<form asp-action="Edit" class="edit-table-form">
+		<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+		<input type="hidden" asp-for="Id" />
 
-    <div class="details-buttons">
-        <button type="submit" class="details-btn details-btn-save">
-            <i class="fas fa-check"></i> Save
-        </button>
-        <a asp-action="Index" class="details-btn">Back</a>
-    </div>
-</form>
+		<table class="details-table">
+			<tr>
+				<th><label asp-for="Name" class="control-label"></label></th>
+				<td>
+					<input asp-for="Name" class="form-control details-input" />
+					<span asp-validation-for="Name" class="text-danger"></span>
+				</td>
+			</tr>
+			<tr>
+				<th><label asp-for="Description" class="control-label"></label></th>
+				<td>
+					<input asp-for="Description" class="form-control details-input" />
+					<span asp-validation-for="Description" class="text-danger"></span>
+				</td>
+			</tr>
+			<tr>
+				<th><label class="control-label">Reminder Time</label></th>
+				<td>
+					<input asp-for="ReminderTime" class="form-control details-input" type="time" />
+					<span asp-validation-for="ReminderTime" class="text-danger"></span>
+				</td>
+			</tr>
+			<tr>
+				<th><label class="control-label">Day of the week</label></th>
+				<td>
+					<select asp-for="DayId" class="form-control details-select" asp-items="ViewBag.DayId"></select>
+					<span asp-validation-for="DayId" class="text-danger"></span>
+				</td>
+			</tr>
+		</table>
+
+		<div class="details-buttons">
+			<button type="submit" class="add-bttn">
+				<i class="fas fa-check"></i> Save
+			</button>
+			<a asp-action="Index" asp-route-id="@ViewData["plannerId"]" class="back-bttn">Back</a>
+		</div>
+	</form>
+</div>
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
 }

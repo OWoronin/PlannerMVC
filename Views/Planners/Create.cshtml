@@ -1,0 +1,38 @@
+﻿@model Pz_Proj_11_12.Models.Planner
+
+@{
+	ViewData["Title"] = "Create planner";
+}
+
+<h1>Create planner</h1>
+<hr />
+
+<div class="my-form-card">
+	<form asp-action="Create" class="edit-table-form">
+		<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+		<input type="hidden" name="UserId" value="@ViewData["UserId"]" />
+
+		<table class="details-table">
+			<tr>
+				<th><label asp-for="Name" class="control-label"></label></th>
+				<td>
+					<input asp-for="Name" class="form-control details-input" />
+					<span asp-validation-for="Name" class="text-danger"></span>
+				</td>
+			</tr>
+		</table>
+
+		<div class="details-buttons">
+			<button type="submit" class="add-bttn">
+				<i class="fas fa-plus"></i> Create
+			</button>
+			<a asp-action="Index" asp-controller="Users" class="back-bttn">Back</a>
+		</div>
+	</form>
+</div>
+
+@section Scripts {
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
+}

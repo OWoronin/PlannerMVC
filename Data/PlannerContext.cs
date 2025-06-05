@@ -12,6 +12,8 @@ namespace Pz_Proj_11_12.Data
         public DbSet<Reminder> Reminders { get; set; }
         public DbSet<Meeting> Meetings { get; set; }
 
+        public DbSet<User> Users { get; set; }
+
         //lookups are db sets too 
         public DbSet<Priority> Priorities { get; set; }
         public DbSet<Status> Statuses { get; set; }

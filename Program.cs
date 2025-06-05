@@ -1,5 +1,8 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Pz_Proj_11_12.Data;
+using Pz_Proj_11_12.Handlers;
+using Pz_Proj_11_12.Utils;
 
 namespace Pz_Proj_11_12
 {
@@ -13,8 +16,36 @@ namespace Pz_Proj_11_12
             builder.Services.AddControllersWithViews();
 
             builder.Services.AddSqlServer<PlannerContext>(builder.Configuration.GetConnectionString("Connection"),
-                options => options.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)); 
+                options => options.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery));
 
+            builder.Services.AddDistributedMemoryCache();
+            builder.Services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(30);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
+
+            builder.Services.AddAuthentication("Cookie").AddCookie("Cookie", options =>
+            {
+                options.LoginPath = "/Users/Login";
+                options.AccessDeniedPath = "/Users/AccessDenied";
+            });
+
+            builder.Services.AddAuthorization(options =>
+            {
+                options.AddPolicy(HanderNames.Planner, policy => policy.Requirements.Add(new IsPlannerOwnerRequirement()));
+                options.AddPolicy(HanderNames.Task, policy => policy.Requirements.Add(new IsTaskOwnerRequirement()));
+                options.AddPolicy(HanderNames.Reminder, policy => policy.Requirements.Add(new IsReminderOwnerRequirement()));
+                options.AddPolicy(HanderNames.Meeting, policy => policy.Requirements.Add(new IsMeetingOwnerRequirement()));
+                options.AddPolicy(HanderNames.Day, policy => policy.Requirements.Add(new IsDayOwnerRequirement()));
+            });
+
+            builder.Services.AddScoped<IAuthorizationHandler, IsPlannerOwnerHandler>();
+            builder.Services.AddScoped<IAuthorizationHandler, IsTaskOwnerHandler>();
+            builder.Services.AddScoped<IAuthorizationHandler, IsReminderOwnerHandler>();
+            builder.Services.AddScoped<IAuthorizationHandler, IsMeetingOwnerHandler>();
+            builder.Services.AddScoped<IAuthorizationHandler, IsDayOwnerHandler>();
 
 
             var app = builder.Build();
@@ -40,7 +71,10 @@ namespace Pz_Proj_11_12
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseSession();
 
             app.MapControllerRoute(
                 name: "default",

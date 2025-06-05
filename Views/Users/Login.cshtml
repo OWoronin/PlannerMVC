@@ -1,0 +1,29 @@
+﻿@{
+	ViewData["Title"] = "Login";
+}
+
+<div class="d-flex justify-content-center align-items-center" style="min-height: 100vh;">
+	<div class="user-card">
+		<div class="text-center mb-4">
+			<h1 class="user-title">Log in</h1>
+		</div>
+		<form asp-action="Login" method="post" class="w-100">
+			<div class="mb-3">
+				<input type="text" name="login" class="form-control user-input w-100" placeholder="Login" required autocomplete="username" />
+			</div>
+			<div class="mb-4">
+				<input type="password" name="password" class="form-control user-input w-100" placeholder="Password" required autocomplete="current-password" />
+			</div>
+			@if (ViewBag.Error != null)
+			{
+				<div class="alert alert-danger py-2 mb-3">@ViewBag.Error</div>
+			}
+			<button type="submit" class="user-btn-login-filled full-width-btn-fix mb-3">
+				Log in
+			</button>
+			<a href="/Users/Register" class="back-bttn full-width-btn-fix">
+				Create an account
+			</a>
+		</form>
+	</div>
+</div>

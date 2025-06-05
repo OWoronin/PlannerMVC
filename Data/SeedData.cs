@@ -37,6 +37,8 @@ namespace Pz_Proj_11_12.Data
                     context.SaveChanges();
                 }
 
+
+
                 if (!context.Statuses.Any())
                 {
                     context.Statuses.AddRange(
@@ -54,10 +56,22 @@ namespace Pz_Proj_11_12.Data
                 var mediumDifficultyId = context.Difficulties.First(d => d.Name == "Medium").Id;
                 var createdStatusId = context.Statuses.First(s => s.Name == "Created").Id;
 
-          
+                User testUser; 
+
+                if (!context.Users.Any())
+                {
+                    testUser = new User { Login = "test", Password = "test" };
+                    context.Users.Add(testUser);
+                    context.SaveChanges();
+                }
+                else
+                {
+                    testUser = context.Users.First();
+                }
+
                 if (!context.Planners.Any())
                 {
-                    var planner = new Planner { Name = "Weekly Planner" };
+                    var planner = new Planner { Name = "Weekly Planner", UserId = testUser.Id };
                     context.Planners.Add(planner);
                     context.SaveChanges();
 

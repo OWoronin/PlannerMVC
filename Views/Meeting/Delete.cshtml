@@ -1,54 +1,58 @@
 ﻿@model Pz_Proj_11_12.Models.Meeting
 
 @{
-    ViewData["Title"] = "Delete";
+	ViewData["Title"] = "Delete meeting";
 }
+<h1>Delete meeting</h1>
+<hr />
 
-<h1>Delete</h1>
+<h4>Are you sure you want to delete this?</h4>
 
-<h3>Are you sure you want to delete this?</h3>
+<div class="my-form-card">
 
-<table class="details-table">
-    <tr>
-        <th>@Html.DisplayNameFor(model => model.Name)</th>
-        <td>@Html.DisplayFor(model => model.Name)</td>
-    </tr>
-    <tr>
-        <th>@Html.DisplayNameFor(model => model.Description)</th>
-        <td>@Html.DisplayFor(model => model.Description)</td>
-    </tr>
-    <tr>
-        <th>@Html.DisplayNameFor(model => model.Priority)</th>
-        <td>@Html.DisplayFor(model => model.Priority.Name)</td>
-    </tr>
-    <tr>
-        <th>@Html.DisplayNameFor(model => model.CreatedDate)</th>
-        <td>@Html.DisplayFor(model => model.CreatedDate)</td>
-    </tr>
-    <tr>
-        <th>@Html.DisplayNameFor(model => model.Location)</th>
-        <td>@Html.DisplayFor(model => model.Location)</td>
-    </tr>
-    <tr>
-        <th>@Html.DisplayNameFor(model => model.StartTime)</th>
-        <td>@Html.DisplayFor(model => model.StartTime)</td>
-    </tr>
-    <tr>
-        <th>@Html.DisplayNameFor(model => model.EndTime)</th>
-        <td>@Html.DisplayFor(model => model.EndTime)</td>
-    </tr>
-    <tr>
-        <th>@Html.DisplayNameFor(model => model.Day)</th>
-        <td>@Html.DisplayFor(model => model.Day.Name)</td>
-    </tr>
-</table>
 
-<form asp-action="Delete">
-    <input type="hidden" asp-for="Id" />
-    <div class="details-buttons">
-        <button type="submit" class="details-btn details-btn-delete">
-            <i class="fas fa-trash-alt"></i> Delete
-        </button>
-        <a asp-action="Index" class="details-btn">Back</a>
-    </div>
-</form>
+	<table class="details-table">
+		<tr>
+			<th>@Html.DisplayNameFor(model => model.Name)</th>
+			<td>@Html.DisplayFor(model => model.Name)</td>
+		</tr>
+		<tr>
+			<th>@Html.DisplayNameFor(model => model.Description)</th>
+			<td>@Html.DisplayFor(model => model.Description)</td>
+		</tr>
+		<tr>
+			<th>@Html.DisplayNameFor(model => model.Priority)</th>
+			<td>@Html.DisplayFor(model => model.Priority.Name)</td>
+		</tr>
+		<tr>
+			<th>@Html.DisplayNameFor(model => model.CreatedDate)</th>
+			<td>@Html.DisplayFor(model => model.CreatedDate)</td>
+		</tr>
+		<tr>
+			<th>@Html.DisplayNameFor(model => model.Location)</th>
+			<td>@Html.DisplayFor(model => model.Location)</td>
+		</tr>
+		<tr>
+			<th>@Html.DisplayNameFor(model => model.StartTime)</th>
+			<td>@Html.DisplayFor(model => model.StartTime)</td>
+		</tr>
+		<tr>
+			<th>@Html.DisplayNameFor(model => model.EndTime)</th>
+			<td>@Html.DisplayFor(model => model.EndTime)</td>
+		</tr>
+		<tr>
+			<th>@Html.DisplayNameFor(model => model.Day)</th>
+			<td>@Html.DisplayFor(model => model.Day.Name)</td>
+		</tr>
+	</table>
+
+	<form asp-action="Delete">
+		<input type="hidden" asp-for="Id" />
+		<div class="details-buttons">
+			<button type="submit" class="delete-bttn">
+				<i class="fas fa-trash-alt"></i> Delete
+			</button>
+			<a asp-action="Index" asp-route-id="@ViewData["plannerId"]" class="back-bttn">Back</a>
+		</div>
+	</form>
+</div>

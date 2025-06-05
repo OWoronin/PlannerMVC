@@ -20,10 +20,10 @@ namespace Pz_Proj_11_12.ViewModels.Search
 		public bool previousPage => PageId > 1; 
 		public bool nextPage => PageId < PagesTotal;
 
-		public static async Task<Pagination<T>> Create(IQueryable<T> source, int pageId, int pageSize)
+		public static Pagination<T> Create(IQueryable<T> source, int pageId, int pageSize)
 		{
-			var counter = await source.CountAsync();
-			var elements = await source.Skip((pageId - 1) * pageSize).Take(pageSize).ToListAsync();
+			var counter = source.Count();
+			var elements = source.Skip((pageId - 1) * pageSize).Take(pageSize).ToList();
 			return new Pagination<T>(elements, pageId, pageSize, counter);
 		}
 

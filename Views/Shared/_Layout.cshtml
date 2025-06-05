@@ -1,72 +1,99 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Http
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Weekly Planner</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/Pz_Proj_11_12.styles.css" asp-append-version="true" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>@ViewData["Title"] - Weekly Planner</title>
+	<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+	<link rel="stylesheet" href="~/Pz_Proj_11_12.styles.css" asp-append-version="true" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-blue-custom border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand navbar-brand-custom" asp-area="" asp-controller="Home" asp-action="Index">
-                    Weekly Planner
-                </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1 nav-custom">
-                        <li class="nav-item">
-                            <a class="nav-link nav-link-custom text-white" asp-area="" asp-controller="Task" asp-action="Index">
-                                <i class="fas fa-tasks me-1"></i> Tasks
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link nav-link-custom text-white" asp-area="" asp-controller="Meeting" asp-action="Index">
-                                <i class="fas fa-handshake me-1"></i> Meetings
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link nav-link-custom text-white" asp-area="" asp-controller="Reminder" asp-action="Index">
-                                <i class="fas fa-bell me-1"></i> Reminders
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link nav-link-custom text-white" asp-area="" asp-controller="Statistics" asp-action="Index">
-                                <i class="fas fa-chart-line me-1"></i> Statistics
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link nav-link-custom text-white" asp-area="" asp-controller="Search" asp-action="Index">
-                                <i class="fas fa-search me-1"></i> Search
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </header>
+	<header>
+		@{
+			var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+			var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
+			var isUserLoggedIn = User.Identity.IsAuthenticated;
 
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
+			var plannerId = Context.Session.GetInt32("plannerId");
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2025 - Weekly Planner by Oliwer Woronin 
-        </div>
-    </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
+			bool isPlannerSelected =
+			(currentController == "Planners" && currentAction == "Details")
+			|| (currentController != "Users");
+
+			bool isUserPanel =
+			isUserLoggedIn && !isPlannerSelected && !(currentController == "Users" && (currentAction == "Register" || currentAction == "Login"));
+		}
+		<nav style="background: #4285f4; height: 58px; box-shadow: 0 1.5px 8px 0 rgba(0,0,0,0.07); display: flex; align-items: center; justify-content: space-between; padding: 0 28px;">
+
+			<div style="display: flex; align-items: center; gap: 24px;">
+				<span style="color: #fff; font-size: 1.35rem; font-weight: 800; letter-spacing: 0.04em; user-select: none;">
+					Weekly Planner
+				</span>
+				@if (isPlannerSelected)
+				{
+					<a class="nav-link" href="@Url.Action("Details", "Planners", new { id = plannerId })" style="color: #fff;">
+						<i class="fas fa-calendar-week"></i> Planner
+					</a>
+					<a class="nav-link" href="@Url.Action("Index", "Task", new { id = plannerId })" style="color: #fff;">
+						<i class="fas fa-tasks"></i> Tasks
+					</a>
+					<a class="nav-link" href="@Url.Action("Index", "Meeting", new { id = plannerId })" style="color: #fff;">
+						<i class="fas fa-handshake"></i> Meetings
+					</a>
+					<a class="nav-link" href="@Url.Action("Index", "Reminder", new { id = plannerId })" style="color: #fff;">
+						<i class="fas fa-bell"></i> Reminders
+					</a>
+					<a class="nav-link" href="@Url.Action("Index", "Search", new { id = plannerId })" style="color: #fff;">
+						<i class="fas fa-search"></i> Search
+					</a>
+					<a class="nav-link" href="@Url.Action("Index", "Statistics", new { id = plannerId })" style="color: #fff;">
+						<i class="fas fa-chart-line"></i> Statistics
+					</a>
+
+				}
+				else if (isUserPanel)
+				{
+					<a class="nav-link" href="/Users/Index" style="color: #fff;"><i class="fas fa-home"></i> Home</a>
+				}
+			</div>
+
+			<div style="display: flex; align-items: center; gap: 18px;">
+				<a class="nav-link" href="/Users/Logout" style="color: #fff;"><i class="fas fa-sign-out-alt"></i> Logout</a>
+
+				<a class="nav-link" href="/Users/Details" style="color: #fff; font-size: 1.15rem;">
+					<i class="fas fa-user-alt"></i>
+					@if (isPlannerSelected)
+					{
+						<span>Your Profile</span>
+					}
+					else
+					{
+						<span>My Profile</span>
+					}
+				</a>
+			</div>
+		</nav>
+
+	</header>
+
+	<div class="container">
+		<main role="main" class="pb-3">
+			@RenderBody()
+		</main>
+	</div>
+
+	<footer class="border-top footer text-muted">
+		<div class="container">
+			&copy; 2025 - Weekly Planner by Oliwer Woronin
+		</div>
+	</footer>
+	<script src="~/lib/jquery/dist/jquery.min.js"></script>
+	<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="~/js/site.js" asp-append-version="true"></script>
+	@await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

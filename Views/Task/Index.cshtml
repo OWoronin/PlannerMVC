@@ -1,80 +1,80 @@
 ﻿@model Pz_Proj_11_12.Models.Planner
 
 @{
-    ViewData["Title"] = "Tasks";
+	ViewData["Title"] = "Tasks";
 }
 
 <h2 class="mb-4">Tasks</h2>
+<hr />
 
 <div class="planner-table">
-    <table class="table text-center table-bordered">
-        <thead>
-            <tr>
-                @foreach (var day in Model.Days)
-                {
-                    <th>@day.Name</th>
-                }
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                @foreach (var day in Model.Days)
-                {
-                    <td>
-                        <div class="section">
-                            @foreach (var task in day.Tasks)
-                            {
-                                var priority = task.Priority.Name.ToLower();
-                                var priorityTitle = "Priority: Low";
-                                var starIcon = "far fa-star";
-                                if (priority == "medium")
-                                {
-                                    starIcon = "fas fa-star-half-alt";
-                                    priorityTitle = "Priority: Medium";
-                                }
-                                else if (priority == "high")
-                                {
-                                    starIcon = "fas fa-star";
-                                    priorityTitle = "Priority: High";
-                                }
+	<table class="table text-center table-bordered">
+		<thead>
+			<tr>
+				@foreach (var day in Model.Days)
+				{
+					<th>@day.Name</th>
+				}
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				@foreach (var day in Model.Days)
+				{
+					<td>
+						<div class="section">
+							@foreach (var task in day.Tasks)
+							{
+								var priority = task.Priority.Name.ToLower();
+								var priorityTitle = "Priority: Low";
+								var starIcon = "far fa-star";
+								if (priority == "medium")
+								{
+									starIcon = "fas fa-star-half-alt";
+									priorityTitle = "Priority: Medium";
+								}
+								else if (priority == "high")
+								{
+									starIcon = "fas fa-star";
+									priorityTitle = "Priority: High";
+								}
 
-                                var difficultyClass = $"difficulty-{task.Difficulty.Name.ToLower()}";
-                                var statusClass = $"status-{task.Status.Name.ToLower()}";
-                                var cardClass = "card p-2 mb-2 " + statusClass;
-                                if (task.Status.Name == "Finished") cardClass += " finished-task";
-                                <div class="@cardClass" style="position:relative;">
-                                    <span class="priority-stars-corner" title="@priorityTitle">
-                                        <i class="@starIcon"></i>
-                                    </span>
-                                    <a asp-action="Details" asp-controller="Task" asp-route-id="@task.Id">
-                                        <div>
-                                            <strong>@task.Name</strong>
-                                        </div>
-                                        <div class="mt-1">
-                                            <span class="badge @difficultyClass">@task.Difficulty.Name</span>
-                                        </div>
-                                    </a>
-                                    <div class="mt-2">
-                                        <a class="btn btn-sm edit-outline action-btn" asp-action="Edit" asp-route-id="@task.Id">Edit</a>
-                                        <a class="btn btn-sm delete-outline action-btn" asp-action="Delete" asp-route-id="@task.Id">Delete</a>
-                                        @if(task.Status.Name != "Finished")
-                                        {
-                                            <a class="btn btn-sm add-outline action-btn" asp-action="Complete" asp-route-id="@task.Id">Complete</a>
-                                        }
-                                        
-                                    </div>
-                                </div>
-                            }
-                        </div>
+								var difficultyClass = $"difficulty-{task.Difficulty.Name.ToLower()}";
+								var statusClass = $"status-{task.Status.Name.ToLower()}";
+								var cardClass = "card " + statusClass;
+								if (task.Status.Name == "Finished") cardClass += " finished-task";
 
-                        <div class="mt-2">
-                            <a class="btn btn-sm add-outline action-btn" asp-controller="Task" asp-action="Create" asp-route-dayId="@day.Id">
-                                Add Task
-                            </a>
-                        </div>
-                    </td>
-                }
-            </tr>
-        </tbody>
-    </table>
+								<div class="@cardClass">
+									<span class="priority-stars-corner" title="@priorityTitle">
+										<i class="@starIcon"></i>
+									</span>
+									<a asp-action="Details" asp-controller="Task" asp-route-id="@task.Id">
+										<div>
+											<span><strong>@task.Name</strong></span>
+										</div>
+										<div>
+											<span class="badge @difficultyClass">@task.Difficulty.Name</span>
+										</div>
+									</a>
+									<div class="button-row">
+										<a class="table-btn-back" asp-action="Edit" asp-route-id="@task.Id">Edit</a>
+										<a class="table-btn-delete" asp-action="Delete" asp-route-id="@task.Id">Delete</a>
+									</div>
+									@if (task.Status.Name != "Finished")
+									{
+										<a class="table-btn-complete" asp-action="Complete" asp-controller="Task" asp-route-id="@task.Id">
+											Complete
+										</a>
+									}
+								</div>
+							}
+						</div>
+						<a class="full-width-btn" asp-controller="Task" asp-action="Create" asp-route-dayId="@day.Id" asp-route-plannerId="@Model.Id">
+							Add Task
+						</a>
+					</td>
+				}
+			</tr>
+		</tbody>
+	</table>
 </div>

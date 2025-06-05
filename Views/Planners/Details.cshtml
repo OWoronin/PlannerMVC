@@ -1,0 +1,177 @@
+﻿@model Pz_Proj_11_12.Models.Planner
+
+@{
+	ViewData["Title"] = "Planner";
+}
+
+<h2>@Model.Name</h2>
+
+<div style="display:flex;justify-content:space-between;align-items:flex-end">
+	<div>
+		<p style="margin: 0 10px 12px 0; padding: 0 1.1em">
+			<b>Owner:</b> @Model.User?.Login
+		</p>
+	</div>
+	<div>
+		<a asp-action="Index" asp-controller="Users" class="add-bttn">Back to planners</a>
+	</div>
+</div>
+
+<div class="planner-table">
+	<table class="table text-center table-bordered">
+		<thead>
+			<tr>
+				@foreach (var day in Model.Days)
+				{
+					<th>@day.Name</th>
+				}
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				@foreach (var day in Model.Days)
+				{
+					<td>
+						<div class="section">
+							@foreach (var task in day.Tasks)
+							{
+								var priority = task.Priority.Name.ToLower();
+								var priorityTitle = "Priority: Low";
+								var starIcon = "far fa-star";
+								if (priority == "medium")
+								{
+									starIcon = "fas fa-star-half-alt";
+									priorityTitle = "Priority: Medium";
+								}
+								else if (priority == "high")
+								{
+									starIcon = "fas fa-star";
+									priorityTitle = "Priority: High";
+								}
+
+								var difficultyClass = $"difficulty-{task.Difficulty.Name.ToLower()}";
+								var statusClass = $"status-{task.Status.Name.ToLower()}";
+								var cardClass = "card " + statusClass;
+								if (task.Status.Name == "Finished") cardClass += " finished-task";
+
+								<div class="@cardClass">
+									<span class="priority-stars-corner" title="@priorityTitle">
+										<i class="@starIcon"></i>
+									</span>
+									<a asp-action="Details" asp-controller="Task" asp-route-id="@task.Id">
+										<div>
+											<span><strong>@task.Name</strong></span>
+										</div>
+										<div>
+											<span class="badge @difficultyClass">@task.Difficulty.Name</span>
+										</div>
+									</a>
+									@if (task.Status.Name != "Finished")
+									{
+										<a class="table-btn-complete" asp-controller="Task" asp-action="Complete" asp-route-id="@task.Id">Complete</a>
+									}
+								</div>
+							}
+						</div>
+
+						<div class="section">
+							@foreach (var reminder in day.Reminders)
+							{
+								<div class="card">
+									<a asp-action="Details" asp-controller="Reminder" asp-route-id="@reminder.Id">
+										<div>
+											<span><strong>@reminder.Name</strong></span>
+										</div>
+										<div style="margin-top: 4px; margin-bottom: 2px;">
+											<span class="text-muted small">
+												@reminder.ReminderTime.ToString("HH:mm")
+											</span>
+										</div>
+									</a>
+								</div>
+							}
+						</div>
+
+						<div class="section">
+							@foreach (var meeting in day.Meetings.OrderBy(m => m.StartTime))
+							{
+								var priority = meeting.Priority.Name.ToLower();
+								var priorityTitle = "Priority: Low";
+								var starIcon = "far fa-star";
+								if (priority == "medium")
+								{
+									starIcon = "fas fa-star-half-alt";
+									priorityTitle = "Priority: Medium";
+								}
+								else if (priority == "high")
+								{
+									starIcon = "fas fa-star";
+									priorityTitle = "Priority: High";
+								}
+
+								<div class="card" style="position:relative;">
+									<span class="priority-stars-corner" title="@priorityTitle">
+										<i class="@starIcon"></i>
+									</span>
+									<a asp-action="Details" asp-controller="Meeting" asp-route-id="@meeting.Id">
+										<div>
+											<strong>@meeting.Name</strong>
+										</div>
+										<div class="mt-1">
+											<span class="text-muted small">
+												@meeting.StartTime.ToString("HH:mm") - @meeting.EndTime.ToString("HH:mm")
+											</span>
+										</div>
+									</a>
+								</div>
+							}
+						</div>
+
+						<a class="full-width-btn" data-bs-toggle="modal" data-bs-target="#addModal" data-day-id="@day.Id">Add Item</a>
+					</td>
+				}
+			</tr>
+		</tbody>
+	</table>
+</div>
+
+<!-- Modal for adding items -->
+<div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content modal-confirm-card">
+			<div class="modal-header">
+				<h5 class="modal-title modal-confirm-title" style="margin-top: 0.6em;">Add item</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body text-center">
+				<p>What would you like to add?</p>
+				<div class="d-grid gap-2">
+					<a id="addTaskBtn" asp-controller="Task" asp-action="Create" asp-route-dayId="" asp-route-plannerId="@Model.Id" class="btn btn-primary">Add Task</a>
+					<a id="addReminderBtn" asp-controller="Reminder" asp-action="Create" asp-route-dayId="" asp-route-plannerId="@Model.Id" class="btn btn-secondary">Add Reminder</a>
+					<a id="addMeetingBtn" asp-controller="Meeting" asp-action="Create" asp-route-dayId="" asp-route-plannerId="@Model.Id" class="btn btn-success">Add Meeting</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+@section Scripts {
+	<script>
+		const modal = document.getElementById('addModal');
+		modal.addEventListener('show.bs.modal', function (event) {
+			const button = event.relatedTarget;
+			const dayId = button.getAttribute('data-day-id');
+
+			const updateHref = (btnId) => {
+				const btn = document.getElementById(btnId);
+				const url = new URL(btn.href);
+				url.searchParams.set('dayId', dayId);
+				btn.href = url.toString();
+			}
+
+			updateHref('addTaskBtn');
+			updateHref('addReminderBtn');
+			updateHref('addMeetingBtn');
+		});
+	</script>
+}

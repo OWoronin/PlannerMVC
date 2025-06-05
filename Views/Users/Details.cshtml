@@ -1,0 +1,169 @@
+﻿@model Pz_Proj_11_12.Models.User
+
+@{
+	ViewData["Title"] = "User Details";
+}
+
+<h1>Details</h1>
+<hr />
+
+
+<div class="my-form-card d-flex flex-row align-items-start mb-3" style="max-width: 1020px; margin: 36px auto 0 auto;">
+
+	<div class="p-4 me-4" style="min-width: 270px; flex: 0 0 310px;">
+		<div class="mb-2" style="font-weight: 700; font-size: 1.18rem; color: #23272f;">Info</div>
+		<table class="userinfo-table-custom mb-0" style="width:100%;">
+			<tbody>
+				<tr>
+					<th>Login</th>
+					<td>@Model.Login</td>
+				</tr>
+				<tr>
+					<th>Password</th>
+					<td>
+						@if (!string.IsNullOrEmpty(Model.Password))
+						{
+							@Html.Raw(new string('*', Model.Password.Length))
+						}
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+
+	<div class="flex-grow-1 p-4">
+		<div class="mb-2" style="font-weight: 700; font-size: 1.18rem; color: #23272f;">Your Planners</div>
+		<table class="planners-table-custom mb-0" style="width:100%;">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Actions</th>
+				</tr>
+			</thead>
+			<tbody>
+				@if (Model.Planners != null && Model.Planners.Any())
+				{
+					foreach (var planner in Model.Planners)
+					{
+						<tr class="planner-row" data-id="@planner.Id" style="cursor:pointer;">
+							<td>@planner.Name</td>
+							<td>
+								<div class="d-flex gap-2 justify-content-end">
+									<a href="/Planners/Edit/@planner.Id" class="table-btn-edit" title="Edit" onclick="event.stopPropagation();">
+										<i class="fas fa-pen"></i>
+									</a>
+									<a href="/Planners/Delete/@planner.Id" class="table-btn-delete" title="Delete" onclick="event.stopPropagation();">
+										<i class="fas fa-trash-alt"></i>
+									</a>
+								</div>
+							</td>
+						</tr>
+					}
+				}
+				else
+				{
+					<tr>
+						<td colspan="2" class="text-center text-muted py-4" style="font-size:1.08rem;">No planners yet. Create your first planner!</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<!-- KARTA DOLNA: Przyciski -->
+<div class="my-form-card p-4 d-flex flex-row justify-content-between align-items-center mb-4" style="max-width: 1020px; margin: 18px auto 0 auto;">
+	<a asp-action="Delete" class="delete-bttn details-action-btn" title="Delete account">
+		<i class="fas fa-trash-alt"></i> Delete
+	</a>
+	<a asp-action="Edit" class="add-bttn details-action-btn" title="Edit account">
+		<i class="fas fa-pen"></i> Edit
+	</a>
+	<a asp-action="Index" class="back-bttn details-action-btn" title="Back">
+		<i class="fas fa-arrow-left"></i> Back
+	</a>
+</div>
+
+<style>
+	/* Info table: first col = niebieska */
+	.userinfo-table-custom th {
+		background-color: #4285f4 !important;
+		color: #fff !important;
+		font-weight: 700;
+		width: 110px;
+		padding: 13px 15px;
+		border: 1px solid #e0e0e0;
+		text-align: left;
+		font-size: 1.09rem;
+		vertical-align: middle;
+	}
+
+	.userinfo-table-custom td {
+		background: #fff;
+		color: #23272f;
+		font-size: 1.09rem;
+		font-weight: 500;
+		padding: 13px 16px;
+		border: 1px solid #e0e0e0;
+		vertical-align: middle;
+	}
+
+	/* Planners table (nagłówek) */
+	.planners-table-custom th {
+		background-color: #4285f4 !important;
+		color: #fff !important;
+		font-weight: 700;
+		font-size: 1.11rem;
+		padding: 13px 17px;
+		border: 1px solid #e0e0e0;
+		text-align: left;
+	}
+
+	.planners-table-custom td {
+		font-size: 1.07rem;
+		color: #23272f;
+		background: #fff;
+		border: 1px solid #e0e0e0;
+		vertical-align: middle;
+		padding: 13px 16px;
+	}
+
+	.planners-table-custom tr:nth-child(even) td {
+		background: #f8fafc;
+	}
+
+	.planners-table-custom tr:hover td {
+		background: #f1f7ff;
+	}
+
+	.details-action-btn {
+		flex: 1 1 0;
+		margin: 0 16px;
+		min-width: 170px;
+		max-width: 250px;
+		text-align: center;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.my-form-card {
+		margin-top: 0 !important;
+		margin-bottom: 0 !important;
+	}
+</style>
+
+<script>
+
+	document.addEventListener('DOMContentLoaded', function () {
+		document.querySelectorAll('.planner-row').forEach(function (row) {
+			row.addEventListener('click', function () {
+				var id = row.getAttribute('data-id');
+				if (id) {
+					window.location.href = '/Planners/Details/' + id;
+				}
+			});
+		});
+	});
+</script>

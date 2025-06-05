@@ -1,45 +1,47 @@
 ﻿@model Pz_Proj_11_12.Models.TaskModel
 
 @{
-    ViewData["Title"] = "Details";
+	ViewData["Title"] = "Details task";
 }
+<h1>Details task</h1>
+<hr />
 
-<h1>Details</h1>
+<div class="my-form-card">
+	<table class="details-table">
+		<tr>
+			<th>@Html.DisplayNameFor(model => model.Name)</th>
+			<td>@Html.DisplayFor(model => model.Name)</td>
+		</tr>
+		<tr>
+			<th>@Html.DisplayNameFor(model => model.Description)</th>
+			<td>@Html.DisplayFor(model => model.Description)</td>
+		</tr>
+		<tr>
+			<th>@Html.DisplayNameFor(model => model.Difficulty)</th>
+			<td>@Html.DisplayFor(model => model.Difficulty.Name)</td>
+		</tr>
+		<tr>
+			<th>@Html.DisplayNameFor(model => model.Priority)</th>
+			<td>@Html.DisplayFor(model => model.Priority.Name)</td>
+		</tr>
+		<tr>
+			<th>@Html.DisplayNameFor(model => model.Status)</th>
+			<td>@Html.DisplayFor(model => model.Status.Name)</td>
+		</tr>
+		<tr>
+			<th>@Html.DisplayNameFor(model => model.CreatedDate)</th>
+			<td>@Html.DisplayFor(model => model.CreatedDate)</td>
+		</tr>
+		<tr>
+			<th>@Html.DisplayNameFor(model => model.Day)</th>
+			<td>@Html.DisplayFor(model => model.Day.Name)</td>
+		</tr>
+	</table>
 
-<table class="details-table">
-    <tr>
-        <th>@Html.DisplayNameFor(model => model.Name)</th>
-        <td>@Html.DisplayFor(model => model.Name)</td>
-    </tr>
-    <tr>
-        <th>@Html.DisplayNameFor(model => model.Description)</th>
-        <td>@Html.DisplayFor(model => model.Description)</td>
-    </tr>
-    <tr>
-        <th>@Html.DisplayNameFor(model => model.Difficulty)</th>
-        <td>@Html.DisplayFor(model => model.Difficulty.Name)</td>
-    </tr>
-    <tr>
-        <th>@Html.DisplayNameFor(model => model.Priority)</th>
-        <td>@Html.DisplayFor(model => model.Priority.Name)</td>
-    </tr>
-    <tr>
-        <th>@Html.DisplayNameFor(model => model.Status)</th>
-        <td>@Html.DisplayFor(model => model.Status.Name)</td>
-    </tr>
-    <tr>
-        <th>@Html.DisplayNameFor(model => model.CreatedDate)</th>
-        <td>@Html.DisplayFor(model => model.CreatedDate)</td>
-    </tr>
-    <tr>
-        <th>@Html.DisplayNameFor(model => model.Day)</th>
-        <td>@Html.DisplayFor(model => model.Day.Name)</td>
-    </tr>
-</table>
-
-<div class="details-buttons">
-    <a asp-action="Edit" asp-route-id="@Model?.Id" class="details-btn details-btn-save">
-        <i class="fas fa-edit"></i> Edit
-    </a>
-    <a asp-action="Index" asp-controller="@TempData["Back"]" class="details-btn">Back</a>
+	<div class="details-buttons">
+		<a asp-action="Edit" asp-route-id="@Model?.Id" class="add-bttn">
+			<i class="fas fa-edit"></i> Edit
+		</a>
+		<a asp-action="@TempData["Action"]" asp-controller="@TempData["Controller"]" asp-route-id="@TempData["Id"]" class="back-bttn">Back</a>
+	</div>
 </div>

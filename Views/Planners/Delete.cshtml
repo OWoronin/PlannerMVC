@@ -1,0 +1,33 @@
+﻿@model Pz_Proj_11_12.Models.Planner
+
+@{
+	ViewData["Title"] = "Delete planner";
+}
+
+<h1>Delete planner</h1>
+<hr />
+
+<h4>Are you sure you want to delete this?</h4>
+
+<div class="my-form-card">
+	<table class="details-table">
+		<tr>
+			<th>@Html.DisplayNameFor(model => model.Name)</th>
+			<td>@Html.DisplayFor(model => model.Name)</td>
+		</tr>
+		<tr>
+			<th>@Html.DisplayNameFor(model => model.User)</th>
+			<td>@Html.DisplayFor(model => model.User.Login)</td>
+		</tr>
+	</table>
+
+	<form asp-action="Delete">
+		<input type="hidden" asp-for="Id" />
+		<div class="details-buttons">
+			<button type="submit" class="delete-bttn">
+				<i class="fas fa-trash-alt"></i> Delete
+			</button>
+			<a asp-action="Details" asp-controller="Users" class="back-bttn">Back</a>
+		</div>
+	</form>
+</div>

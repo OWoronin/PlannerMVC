@@ -1,71 +1,76 @@
 ﻿@model Pz_Proj_11_12.Models.TaskModel
 
 @{
-    ViewData["Title"] = "Create";
+	ViewData["Title"] = "Create task";
 }
 
-<h1>Create</h1>
-
+<h1>Create task</h1>
 <hr />
 
-<form asp-action="Create" class="edit-table-form">
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<div class="my-form-card">
+	<form asp-action="Create" class="edit-table-form">
+		<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+		@if (ViewBag.Error != null)
+		{
+			<div class="alert alert-danger">@ViewBag.Error</div>
+		}
+		<input type="hidden" name="plannerId" value="@ViewData["plannerId"]" />
+		<table class="details-table">
+			<tr>
+				<th><label asp-for="Name" class="control-label"></label></th>
+				<td>
+					<input asp-for="Name" class="form-control details-input" />
+					<span asp-validation-for="Name" class="text-danger"></span>
+				</td>
+			</tr>
+			<tr>
+				<th><label asp-for="Description" class="control-label"></label></th>
+				<td>
+					<input asp-for="Description" class="form-control details-input" />
+					<span asp-validation-for="Description" class="text-danger"></span>
+				</td>
+			</tr>
+			<tr>
+				<th><label class="control-label">Task's difficulty level</label></th>
+				<td>
+					<select asp-for="DifficultyId" class="form-control details-select" asp-items="ViewBag.DifficultyId"></select>
+					<span asp-validation-for="DifficultyId" class="text-danger"></span>
+				</td>
+			</tr>
+			<tr>
+				<th><label class="control-label">Task's priority level</label></th>
+				<td>
+					<select asp-for="PriorityId" class="form-control details-select" asp-items="ViewBag.PriorityId"></select>
+					<span asp-validation-for="PriorityId" class="text-danger"></span>
+				</td>
+			</tr>
+			<tr>
+				<th><label class="control-label">Task's status</label></th>
+				<td>
+					<select asp-for="StatusId" class="form-control details-select" asp-items="ViewBag.StatusId"></select>
+					<span asp-validation-for="StatusId" class="text-danger"></span>
+				</td>
+			</tr>
+			<tr>
+				<th><label class="control-label">Day of the week</label></th>
+				<td>
+					<select asp-for="DayId" class="form-control details-select" asp-items="ViewBag.DayId"></select>
+					<span asp-validation-for="DayId" class="text-danger"></span>
+				</td>
+			</tr>
+		</table>
 
-    <table class="details-table">
-        <tr>
-            <th><label asp-for="Name" class="control-label"></label></th>
-            <td>
-                <input asp-for="Name" class="form-control details-input" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </td>
-        </tr>
-        <tr>
-            <th><label asp-for="Description" class="control-label"></label></th>
-            <td>
-                <input asp-for="Description" class="form-control details-input" />
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </td>
-        </tr>
-        <tr>
-            <th><label class="control-label">Task's difficulty level</label></th>
-            <td>
-                <select asp-for="DifficultyId" class="form-control details-select" asp-items="ViewBag.DifficultyId"></select>
-                <span asp-validation-for="DifficultyId" class="text-danger"></span>
-            </td>
-        </tr>
-        <tr>
-            <th><label class="control-label">Task's priority level</label></th>
-            <td>
-                <select asp-for="PriorityId" class="form-control details-select" asp-items="ViewBag.PriorityId"></select>
-                <span asp-validation-for="PriorityId" class="text-danger"></span>
-            </td>
-        </tr>
-        <tr>
-            <th><label class="control-label">Task's status</label></th>
-            <td>
-                <select asp-for="StatusId" class="form-control details-select" asp-items="ViewBag.StatusId"></select>
-                <span asp-validation-for="StatusId" class="text-danger"></span>
-            </td>
-        </tr>
-        <tr>
-            <th><label class="control-label">Day of the week</label></th>
-            <td>
-                <select asp-for="DayId" class="form-control details-select" asp-items="ViewBag.DayId"></select>
-                <span asp-validation-for="DayId" class="text-danger"></span>
-            </td>
-        </tr>
-    </table>
-
-    <div class="details-buttons">
-        <button type="submit" class="details-btn details-btn-create">
-            <i class="fas fa-plus"></i> Create
-        </button>
-        <a asp-action="Index" class="details-btn">Back</a>
-    </div>
-</form>
+		<div class="details-buttons">
+			<button type="submit" class="add-bttn">
+				<i class="fas fa-plus"></i> Create
+			</button>
+			<a asp-action="@TempData["Action"]" asp-controller="@TempData["Controller"]" asp-route-id="@TempData["Id"]" class="back-bttn">Back</a>
+		</div>
+	</form>
+</div>
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
 }

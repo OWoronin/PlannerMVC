@@ -1,10 +1,14 @@
 ﻿using Pz_Proj_11_12.Models.LookupTables;
+using System.ComponentModel.DataAnnotations;
 
 namespace Pz_Proj_11_12.Models
 {
     public class TaskModel
     {
         public int Id { get; set; }
+
+        [Required]
+        [StringLength(9)]
         public string Name { get; set; }
         public string Description { get; set; }
         public Difficulty Difficulty { get; set; } //object

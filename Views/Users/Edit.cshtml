@@ -1,0 +1,89 @@
+﻿@model Pz_Proj_11_12.Models.User
+@{
+	ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+<hr />
+
+<div class="my-form-card">
+	<form id="userEditForm" asp-action="Edit" method="post" class="edit-table-form">
+		<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+		<input type="hidden" asp-for="Id" />
+
+		<table class="details-table">
+			<tr>
+				<th><label asp-for="Login" class="control-label"></label></th>
+				<td>
+					<input asp-for="Login" class="form-control details-input" />
+					<span asp-validation-for="Login" class="text-danger"></span>
+				</td>
+			</tr>
+			<tr>
+				<th><label asp-for="Password" class="control-label"></label></th>
+				<td>
+					<input asp-for="Password" class="form-control details-input" />
+					<span asp-validation-for="Password" class="text-danger"></span>
+				</td>
+			</tr>
+		</table>
+
+		<div class="details-buttons">
+			<button type="button" class="add-bttn" onclick="showPasswordConfirmModal('edit')">
+				<i class="fas fa-check"></i> Save
+			</button>
+			<a asp-action="Details" class="back-bttn">Back</a>
+		</div>
+	</form>
+</div>
+
+@await Html.PartialAsync("ConfirmPassword", Model)
+
+@section Scripts {
+	<script>
+		function showPasswordConfirmModal(operationType) {
+			document.getElementById('passwordOperationType').value = operationType;
+			document.getElementById('passwordConfirmModal').style.display = 'flex';
+		}
+
+		function hidePasswordConfirmModal() {
+			document.getElementById('passwordConfirmModal').style.display = 'none';
+		}
+
+		document.addEventListener("DOMContentLoaded", function () {
+			var modalForm = document.getElementById("passwordConfirmForm");
+
+			if (modalForm) {
+				modalForm.addEventListener("submit", function (e) {
+					e.preventDefault();
+					var password = modalForm.querySelector("input[name='ConfirmPassword']").value;
+					var operation = document.getElementById("passwordOperationType").value;
+
+					var targetForm = null;
+					if (operation === 'edit') {
+						targetForm = document.getElementById("userEditForm");
+					} else if (operation === 'delete') {
+						targetForm = document.getElementById("userDeleteForm");
+					}
+
+					if (targetForm) {
+						let hidden = targetForm.querySelector("input[name='ConfirmedPassword']");
+						if (!hidden) {
+							hidden = document.createElement("input");
+							hidden.type = "hidden";
+							hidden.name = "ConfirmedPassword";
+							targetForm.appendChild(hidden);
+						}
+						hidden.value = password;
+
+						hidePasswordConfirmModal();
+						setTimeout(() => targetForm.submit(), 50);
+					}
+				});
+			}
+		});
+	</script>
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
+}

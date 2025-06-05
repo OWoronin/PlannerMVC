@@ -1,38 +1,41 @@
 ﻿@model Pz_Proj_11_12.Models.Reminder
 
 @{
-    ViewData["Title"] = "Details";
+	ViewData["Title"] = "Details reminder";
 }
 
-<h1>Details</h1>
+<h1>Details reminder</h1>
+<hr />
 
-<table class="details-table">
-    <tr>
-        <th>@Html.DisplayNameFor(model => model.Name)</th>
-        <td>@Html.DisplayFor(model => model.Name)</td>
-    </tr>
-    <tr>
-        <th>@Html.DisplayNameFor(model => model.Description)</th>
-        <td>@Html.DisplayFor(model => model.Description)</td>
-    </tr>
-    <tr>
-        <th>@Html.DisplayNameFor(model => model.CreatedDate)</th>
-        <td>@Html.DisplayFor(model => model.CreatedDate)</td>
-    </tr>
-    <tr>
-        <th>@Html.DisplayNameFor(model => model.ReminderTime)</th>
-        <td>@Html.DisplayFor(model => model.ReminderTime)</td>
-    </tr>
-    <tr>
-        <th>@Html.DisplayNameFor(model => model.Day)</th>
-        <td>@Html.DisplayFor(model => model.Day.Name)</td>
-    </tr>
-</table>
+<div class="my-form-card">
 
-<div class="details-buttons">
-    <a asp-action="Edit" asp-route-id="@Model?.Id" class="details-btn details-btn-save">
-        <i class="fas fa-edit"></i> Edit
-    </a>
-    <a asp-action="Index" asp-controller="@TempData["Back"]" class="details-btn">Back</a>
+	<table class="details-table">
+		<tr>
+			<th>@Html.DisplayNameFor(model => model.Name)</th>
+			<td>@Html.DisplayFor(model => model.Name)</td>
+		</tr>
+		<tr>
+			<th>@Html.DisplayNameFor(model => model.Description)</th>
+			<td>@Html.DisplayFor(model => model.Description)</td>
+		</tr>
+		<tr>
+			<th>@Html.DisplayNameFor(model => model.CreatedDate)</th>
+			<td>@Html.DisplayFor(model => model.CreatedDate)</td>
+		</tr>
+		<tr>
+			<th>@Html.DisplayNameFor(model => model.ReminderTime)</th>
+			<td>@Html.DisplayFor(model => model.ReminderTime)</td>
+		</tr>
+		<tr>
+			<th>@Html.DisplayNameFor(model => model.Day)</th>
+			<td>@Html.DisplayFor(model => model.Day.Name)</td>
+		</tr>
+	</table>
+
+	<div class="details-buttons">
+		<a asp-action="Edit" asp-route-id="@Model?.Id" class="add-bttn">
+			<i class="fas fa-edit"></i> Edit
+		</a>
+		<a asp-action="@TempData["Action"]" asp-controller="@TempData["Controller"]" asp-route-id="@TempData["Id"]" class="back-bttn">Back</a>
+	</div>
 </div>
-

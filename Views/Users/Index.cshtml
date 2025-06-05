@@ -1,0 +1,145 @@
+﻿@model Pz_Proj_11_12.Models.User
+
+@{
+	ViewData["Title"] = "Your Planners";
+}
+
+<div class="container-fluid d-flex justify-content-center" style="min-height: 80vh; align-items: flex-start;">
+	<div class="my-form-card planners-card-spacing mx-auto planners-card-centered">
+		<div class="text-center mb-4">
+			<h1 class="planners-title">Your Planners</h1>
+		</div>
+		<table class="planners-table mb-0 mx-auto">
+			<thead>
+				<tr>
+					<th class="planners-th planners-th-name">Name</th>
+					<th class="planners-th planners-th-actions"></th>
+				</tr>
+			</thead>
+			<tbody>
+				@if (Model.Planners.Any())
+				{
+					foreach (var planner in Model.Planners)
+					{
+						<tr>
+							<td class="planners-td planners-td-name">@planner.Name</td>
+							<td class="planners-td planners-td-actions">
+								<div class="d-flex gap-3 justify-content-end">
+									<a href="/Planners/Details/@planner.Id" class="add-bttn">
+										Select <i class="fas fa-ellipsis-v ms-2"></i>
+									</a>
+								</div>
+							</td>
+						</tr>
+					}
+				}
+				else
+				{
+					<tr>
+						<td colspan="2" class="text-center text-muted py-4" style="font-size:1.08rem;">No planners yet. Create your first planner!</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+		<div class="d-flex justify-content-center mt-4 w-100">
+			<a href="/Planners/Create" class="add-bttn w-100" style="max-width:350px; font-size:1.18rem;">
+				<i class="fas fa-plus me-2"></i>
+				Create new planner
+			</a>
+		</div>
+	</div>
+</div>
+
+<style>
+	.planners-card-spacing {
+		margin-top: 7vh;
+		margin-bottom: 3vh;
+		width: 100%;
+		max-width: 1020px;
+	}
+
+
+	.planners-card-centered {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		text-align: center;
+	}
+
+	.planners-title {
+		font-size: 2.7rem;
+		font-weight: 800;
+		color: #23272f;
+		margin-bottom: 1.8rem;
+		margin-top: 0;
+		letter-spacing: -1px;
+	}
+
+	.planners-table {
+		width: 100%;
+		max-width: 900px;
+		border-radius: 20px;
+		overflow: hidden;
+		box-shadow: none;
+		border-collapse: separate;
+		border-spacing: 0;
+		background: #fff;
+	}
+
+	.planners-th {
+		background: #4285f4;
+		color: #fff;
+		font-size: 1.19rem;
+		font-weight: 700;
+		border-bottom: 3.5px solid #3572cb;
+		padding: 1.18rem 2rem;
+		text-align: left;
+		border-right: 2px solid #fff;
+	}
+
+		.planners-th:last-child {
+			border-top-right-radius: 14px;
+			border-right: none;
+			text-align: right;
+		}
+
+		.planners-th:first-child {
+			border-top-left-radius: 14px;
+		}
+
+	.planners-td {
+		font-size: 1.16rem;
+		vertical-align: middle;
+		padding: 1.13rem 1.7rem;
+		border-bottom: 2px solid #e2e8f0;
+		border-right: 2px solid #e2e8f0;
+		background: #fff;
+	}
+
+	.planners-td-name {
+		background: #f8fafc;
+		min-width: 300px;
+		max-width: 540px;
+		word-break: break-word;
+	}
+
+	.planners-td-actions {
+		background: #fff;
+		min-width: 270px;
+		text-align: right;
+		border-right: none;
+	}
+
+	.planners-table tr:last-child td {
+		border-bottom: none;
+	}
+
+	.planners-table td:last-child, .planners-th:last-child {
+		border-right: none;
+	}
+
+	.fas {
+		font-size: 1.10em;
+		margin-left: 7px;
+	}
+</style>

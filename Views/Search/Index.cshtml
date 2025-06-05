@@ -1,188 +1,309 @@
 ﻿@model Pz_Proj_11_12.ViewModels.Search.SearchResultViewModel
 
 @{
-    ViewData["Title"] = "Search";
+	ViewData["Title"] = "Search";
 }
 
 <h1 class="text-center mt-4 mb-4">Search</h1>
 
 <div class="d-flex justify-content-center">
-    <form method="get" asp-action="Index" class="search-form d-flex justify-content-center align-items-center">
-        <input type="text"
-               name="searchQuery"
-               value="@Model.SearchQuery"
-               placeholder="name"
-               class="search-input form-control" />
-        <input type="hidden" name="sortColumn" value="@Model.SortColumn" />
-        <input type="hidden" name="sortDirection" value="@Model.SortDirection" />
-        <button type="submit" class="search-button btn d-flex align-items-center justify-content-center">
-            <i class="fas fa-search"></i>
-        </button>
-    </form>
+	<form method="get" asp-action="Index">
+		<div class="mb-3 text-center">
+			<label>Filter by type:</label><br />
+			@if(Model.FilterType == 0)
+			{
+				<label><input type="radio" name="FilterType" value="0" checked /> All</label>
+			}
+			else
+			{
+				<label><input type="radio" name="FilterType" value="0" /> All</label>
+			}
+			@if(Model.FilterType == 1)
+			{
+				<label><input type="radio" name="FilterType" value="1" checked /> Task</label>
+			}
+			else
+			{
+				<label><input type="radio" name="FilterType" value="1" /> Task</label>
+			}
+			@if(Model.FilterType == 2)
+			{
+				<label><input type="radio" name="FilterType" value="2" checked /> Meeting</label>
+			}
+			else
+			{
+				<label><input type="radio" name="FilterType" value="2" /> Meeting</label>
+			}
+			@if(Model.FilterType == 3)
+			{
+				<label><input type="radio" name="FilterType" value="3" checked /> Reminder</label>
+			}
+			else
+			{
+				<label><input type="radio" name="FilterType" value="3" /> Reminder</label>
+			}
+		</div>
+
+
+		<div class="mb-3">
+			<input type="text" name="searchQuery" placeholder="Search by name" value="@Model.SearchQuery" class="form-control" />
+		</div>
+
+		<div id="task-filters" class="filter-section">
+			<select name="TaskStatusId" class="form-select">
+				<option value="">-- Status --</option>
+				@foreach (var status in Model.Statuses)
+				{
+					@if (Model.TaskStatusId == status.Id)
+					{
+						<option value="@status.Id" selected="selected">@status.Name</option>
+					}
+					else
+					{
+						<option value="@status.Id">@status.Name</option>
+					}
+
+				}
+			</select>
+
+			<select name="TaskPriorityId" class="form-select">
+				<option value="">-- Priority --</option>
+				@foreach (var priority in Model.Priorities)
+				{
+					@if (Model.TaskPriorityId == priority.Id)
+					{
+						<option value="@priority.Id" selected="selected">@priority.Name</option>
+					}
+					else
+					{
+						<option value="@priority.Id">@priority.Name</option>
+					}
+				}
+			</select>
+
+			<select name="TaskDifficultyId" class="form-select">
+				<option value="">-- Difficulty --</option>
+				@foreach (var difficulty in Model.Difficulties)
+				{
+					@if (Model.TaskDifficultyId == difficulty.Id)
+					{
+						<option value="@difficulty.Id" selected="selected">@difficulty.Name</option>
+					}
+					else
+					{
+						<option value="@difficulty.Id">@difficulty.Name</option>
+					}
+				}
+			</select>
+
+		</div>
+
+		<div id="meeting-filters" class="filter-section" style="display: none;">
+			<select name="MeetingPriorityId" class="form-select">
+				<option value="">-- Priority --</option>
+				@foreach (var priority in Model.Priorities)
+				{
+					@if (Model.MeetingPriorityId == priority.Id)
+					{
+						<option value="@priority.Id" selected="selected">@priority.Name</option>
+					}
+					else
+					{
+						<option value="@priority.Id">@priority.Name</option>
+					}
+				}
+			</select>
+
+			<input type="text" name="MeetingLocation" class="form-control" placeholder="Location" />
+		</div>
+
+		<div id="reminder-filters" class="filter-section" style="display: none;">
+		</div>
+
+		<div class="text-center mt-3">
+			<button type="submit" class="btn btn-primary">Search</button>
+		</div>
+	</form>
 </div>
 
 <div class="table-responsive">
-    <table class="results-table table mt-4">
-        <thead>
-            <tr>
-                <th>
-                    <a asp-route-sortColumn="Name"
-                       asp-route-sortDirection="@(Model.SortColumn == "Name" && Model.SortDirection == "asc" ? "desc" : "asc")"
-                       asp-route-searchQuery="@Model.SearchQuery"
-                       asp-route-page="1">
-                        Name @(Model.SortColumn == "Name" ? (Model.SortDirection == "asc" ? "↑" : "↓") : "")
-                    </a>
-                </th>
-                <th>
-                    <a asp-route-sortColumn="CreateDate"
-                       asp-route-sortDirection="@(Model.SortColumn == "CreateDate" && Model.SortDirection == "asc" ? "desc" : "asc")"
-                       asp-route-searchQuery="@Model.SearchQuery"
-                       asp-route-page="1">
-                        Created Date @(Model.SortColumn == "CreateDate" ? (Model.SortDirection == "asc" ? "↑" : "↓") : "")
-                    </a>
-                </th>
-                <th>Type</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model.Results)
-            {
-                string controller = item.Type switch
-                {
-                    "Meeting" => "Meeting",
-                    "Task" => "Task",
-                    "Reminder" => "Reminder",
-                    _ => ""
-                };
+	<table class="results-table table mt-4">
+		<thead>
+			<tr>
+				<th>
+					<a asp-route-sortColumn="Name"
+					   asp-route-sortDirection="@(Model.SortColumn == "Name" && Model.SortDirection == "asc" ? "desc" : "asc")"
+					   asp-route-searchQuery="@Model.SearchQuery"
+					   asp-route-page="1">
+						Name @(Model.SortColumn == "Name" ? (Model.SortDirection == "asc" ? "↑" : "↓") : "")
+					</a>
+				</th>
+				<th>
+					<a asp-route-sortColumn="CreateDate"
+					   asp-route-sortDirection="@(Model.SortColumn == "CreateDate" && Model.SortDirection == "asc" ? "desc" : "asc")"
+					   asp-route-searchQuery="@Model.SearchQuery"
+					   asp-route-page="1">
+						Created Date @(Model.SortColumn == "CreateDate" ? (Model.SortDirection == "asc" ? "↑" : "↓") : "")
+					</a>
+				</th>
+				<th>Type</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var item in Model.Results)
+			{
+				string controller = item.Type switch
+				{
+					"Meeting" => "Meeting",
+					"Task" => "Task",
+					"Reminder" => "Reminder",
+					_ => ""
+				};
 
-                <tr onclick="location.href='@Url.Action("Details", controller, new { id = item.Id })'">
-                    <td>@item.Name</td>
-                    <td>@item.CreatedDate.ToString("yyyy-MM-dd")</td>
-                    <td>@item.Type</td>
-                </tr>
-            }
-        </tbody>
-    </table>
+				<tr onclick="location.href='@Url.Action("Details", controller, new { id = item.Id })'">
+					<td>@item.Name</td>
+					<td>@item.CreatedDate.ToString("yyyy-MM-dd")</td>
+					<td>@item.Type</td>
+				</tr>
+			}
+		</tbody>
+	</table>
 </div>
 
 <div class="d-flex justify-content-center">
-    <div class="pagination-container d-flex align-items-center justify-content-center mt-3 mb-5">
-        @if (Model.Results.previousPage)
-        {
-            <a asp-route-page="@(Model.Results.PageId - 1)"
-               asp-route-searchQuery="@Model.SearchQuery"
-               asp-route-sortColumn="@Model.SortColumn"
-               asp-route-sortDirection="@Model.SortDirection"
-               class="pagination-link pagination-btn d-flex align-items-center justify-content-center me-2">
-                <i class="fas fa-arrow-left"></i>
-            </a>
-        }
-        <span class="pagination-info mx-2">Page @Model.Results.PageId of @Model.Results.PagesTotal</span>
-        @if (Model.Results.nextPage)
-        {
-            <a asp-route-page="@(Model.Results.PageId + 1)"
-               asp-route-searchQuery="@Model.SearchQuery"
-               asp-route-sortColumn="@Model.SortColumn"
-               asp-route-sortDirection="@Model.SortDirection"
-               class="pagination-link pagination-btn d-flex align-items-center justify-content-center ms-2">
-                <i class="fas fa-arrow-right"></i>
-            </a>
-        }
-    </div>
+	<div class="pagination-container d-flex align-items-center justify-content-center mt-3 mb-5">
+		@if (Model.Results.previousPage)
+		{
+			<a asp-route-page="@(Model.Results.PageId - 1)"
+			   asp-route-searchQuery="@Model.SearchQuery"
+			   asp-route-sortColumn="@Model.SortColumn"
+			   asp-route-sortDirection="@Model.SortDirection"
+			   class="pagination-link pagination-btn d-flex align-items-center justify-content-center me-2">
+				<i class="fas fa-arrow-left"></i>
+			</a>
+		}
+		<span class="pagination-info mx-2">Page @Model.Results.PageId of @Model.Results.PagesTotal</span>
+		@if (Model.Results.nextPage)
+		{
+			<a asp-route-page="@(Model.Results.PageId + 1)"
+			   asp-route-searchQuery="@Model.SearchQuery"
+			   asp-route-sortColumn="@Model.SortColumn"
+			   asp-route-sortDirection="@Model.SortDirection"
+			   class="pagination-link pagination-btn d-flex align-items-center justify-content-center ms-2">
+				<i class="fas fa-arrow-right"></i>
+			</a>
+		}
+	</div>
 </div>
 
+@section Scripts {
+	<script>
+		function updateFilterVisibility() {
+			var type = $('input[name="FilterType"]:checked').val();
+			$('.filter-section').hide();
+			if (type === "1") $('#task-filters').show();
+			else if (type === "2") $('#meeting-filters').show();
+			else if (type === "3") $('#reminder-filters').show();
+		}
+
+		$(document).ready(updateFilterVisibility);
+		$('input[name="FilterType"]').on('change', updateFilterVisibility);
+	</script>
+}
+
+
 <style>
-    .search-form {
-        width: 100%;
-        max-width: 470px;
-        gap: 10px;
-        margin-bottom: 0;
-    }
+	.search-form {
+		width: 100%;
+		max-width: 470px;
+		gap: 10px;
+		margin-bottom: 0;
+	}
 
-    .search-input {
-        padding: 8px 14px;
-        border: 1px solid #ccc;
-        border-radius: 6px;
-        font-size: 1rem;
-        min-width: 200px;
-        flex: 1 1 auto;
-    }
+	.search-input {
+		padding: 8px 14px;
+		border: 1px solid #ccc;
+		border-radius: 6px;
+		font-size: 1rem;
+		min-width: 200px;
+		flex: 1 1 auto;
+	}
 
-    .search-button {
-        background-color: #4285f4;
-        color: #fff;
-        border-radius: 6px;
-        font-weight: 600;
-        border: none;
-        min-width: 48px;
-        min-height: 48px;
-        font-size: 1.3rem;
-        padding: 0;
-        transition: background 0.2s;
-    }
+	.search-button {
+		background-color: #4285f4;
+		color: #fff;
+		border-radius: 6px;
+		font-weight: 600;
+		border: none;
+		min-width: 48px;
+		min-height: 48px;
+		font-size: 1.3rem;
+		padding: 0;
+		transition: background 0.2s;
+	}
 
-        .search-button:active, .search-button:focus {
-            background-color: #357ae8;
-            color: #fff;
-        }
+		.search-button:active, .search-button:focus {
+			background-color: #357ae8;
+			color: #fff;
+		}
 
-    .results-table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-bottom: 40px;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
+	.results-table {
+		width: 100%;
+		border-collapse: collapse;
+		margin-bottom: 40px;
+		box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+	}
 
-        .results-table th, .results-table td {
-            border: 1px solid #ddd;
-            padding: 12px 16px;
-            text-align: left;
-        }
+		.results-table th, .results-table td {
+			border: 1px solid #ddd;
+			padding: 12px 16px;
+			text-align: left;
+		}
 
-        .results-table th {
-            background-color: #f5f5f5;
-            color: #444;
-            font-weight: 600;
-        }
+		.results-table th {
+			background-color: #f5f5f5;
+			color: #444;
+			font-weight: 600;
+		}
 
-        .results-table tr:nth-child(even) {
-            background-color: #fafafa;
-        }
+		.results-table tr:nth-child(even) {
+			background-color: #fafafa;
+		}
 
-        .results-table tr:hover {
-            background-color: #f1f1f1;
-            cursor: pointer;
-        }
+		.results-table tr:hover {
+			background-color: #f1f1f1;
+			cursor: pointer;
+		}
 
-    .pagination-container {
-        gap: 18px;
-    }
+	.pagination-container {
+		gap: 18px;
+	}
 
-    .pagination-link.pagination-btn {
-        width: 48px;
-        height: 48px;
-        border: 2px solid #4285f4;
-        background: #fff;
-        color: #4285f4;
-        font-size: 1.4rem;
-        border-radius: 8px;
-        transition: background 0.2s, color 0.2s;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        text-decoration: none;
-    }
+	.pagination-link.pagination-btn {
+		width: 48px;
+		height: 48px;
+		border: 2px solid #4285f4;
+		background: #fff;
+		color: #4285f4;
+		font-size: 1.4rem;
+		border-radius: 8px;
+		transition: background 0.2s, color 0.2s;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		text-decoration: none;
+	}
 
-        .pagination-link.pagination-btn:active, .pagination-link.pagination-btn:focus, .pagination-link.pagination-btn:hover {
-            background: #4285f4;
-            color: #fff;
-        }
+		.pagination-link.pagination-btn:active, .pagination-link.pagination-btn:focus, .pagination-link.pagination-btn:hover {
+			background: #4285f4;
+			color: #fff;
+		}
 
-    .pagination-info {
-        font-size: 1.1rem;
-        font-weight: 600;
-        color: #333;
-        min-width: 32px;
-        text-align: center;
-    }
+	.pagination-info {
+		font-size: 1.1rem;
+		font-weight: 600;
+		color: #333;
+		min-width: 32px;
+		text-align: center;
+	}
 </style>

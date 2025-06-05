@@ -1,153 +1,19 @@
-﻿@model Pz_Proj_11_12.Models.Planner
-@{
-    ViewData["Title"] = "Planner";
+﻿@{
+	ViewData["Title"] = "Home";
 }
 
-<div class="planner-table">
-    <table class="table text-center table-bordered">
-        <thead>
-            <tr>
-                @foreach (var day in Model.Days)
-                {
-                    <th>@day.Name</th>
-                }
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                @foreach (var day in Model.Days)
-                {
-                    <td>
-                        <div class="section">
-                            @foreach (var task in day.Tasks)
-                            {
-                                var priority = task.Priority.Name.ToLower();
-                                var priorityTitle = "Priority: Low";
-                                var starIcon = "far fa-star";
-                                if (priority == "medium")
-                                {
-                                    starIcon = "fas fa-star-half-alt";
-                                    priorityTitle = "Priority: Medium";
-                                }
-                                else if (priority == "high")
-                                {
-                                    starIcon = "fas fa-star";
-                                    priorityTitle = "Priority: High";
-                                }
-
-                                var difficultyClass = $"difficulty-{task.Difficulty.Name.ToLower()}";
-                                var cardClass = "card p-2 mb-2";
-                                if (task.Status.Name == "Finished") cardClass += " finished-task";
-                                else if (task.Status.Name == "Created") cardClass += " status-created";
-                                else if (task.Status.Name == "In_Progress") cardClass += " status-in_progress";
-
-                                <div class="@cardClass" style="position:relative;">
-                                    <span class="priority-stars-corner" title="@priorityTitle">
-                                        <i class="@starIcon"></i>
-                                    </span>
-                                    <a asp-action="Details" asp-controller="Task" asp-route-id="@task.Id" style="display:block; text-decoration:none; color:inherit;">
-                                        <div>
-                                            <strong>@task.Name</strong>
-                                        </div>
-                                        <div class="mt-1">
-                                            <span class="badge @difficultyClass" style="width:100px;display:inline-block;text-align:center;">@task.Difficulty.Name</span>
-                                        </div>
-                                    </a>
-                                    @if (task.Status.Name != "Finished")
-                                    {
-                                        <div class="d-flex justify-content-center mt-2">
-                                            <a class="btn btn-sm complete-outline action-btn" asp-controller="Home" asp-action="Complete" asp-route-id="@task.Id">Complete</a>
-                                        </div>
-                                    }
-                                </div>
-                            }
-                        </div>
-
-                        <div class="section">
-                            @foreach (var reminder in day.Reminders)
-                            {
-                                <a class="card p-2 mb-2" asp-action="Details" asp-controller="Reminder" asp-route-id="@reminder.Id" style="display:block; text-decoration:none; color:inherit;">
-                                    <div><strong>@reminder.Name</strong></div>
-                                    <div class="text-muted small">@reminder.ReminderTime</div>
-                                </a>
-                            }
-                        </div>
-
-                        <div class="section">
-                            @foreach (var meeting in day.Meetings)
-                            {
-                                var priority = meeting.Priority.Name.ToLower();
-                                var priorityTitle = "Priority: Low";
-                                var starIcon = "far fa-star";
-                                if (priority == "medium")
-                                {
-                                    starIcon = "fas fa-star-half-alt";
-                                    priorityTitle = "Priority: Medium";
-                                }
-                                else if (priority == "high")
-                                {
-                                    starIcon = "fas fa-star";
-                                    priorityTitle = "Priority: High";
-                                }
-                                <a class="card p-2 mb-2" style="position:relative; display:block; text-decoration:none; color:inherit;" asp-action="Details" asp-controller="Meeting" asp-route-id="@meeting.Id">
-                                    <span class="priority-stars-corner" title="@priorityTitle">
-                                        <i class="@starIcon"></i>
-                                    </span>
-                                    <div><strong>@meeting.Name</strong></div>
-                                    <div class="mt-1">
-                                        <span class="text-muted small">@meeting.StartTime</span>
-                                    </div>
-                                </a>
-                            }
-                        </div>
-                        <div class="mt-2">
-                            <button class="btn btn-sm add-outline action-btn" data-bs-toggle="modal" data-bs-target="#addModal" data-day-id="@day.Id">
-                                +
-                            </button>
-                        </div>
-                    </td>
-                }
-            </tr>
-        </tbody>
-    </table>
+<div class="d-flex justify-content-center align-items-center" style="min-height: 100vh;">
+	<div class="home-card">
+		<div class="text-center mb-4">
+			<h1 class="home-title">Organize Your Life!</h1>
+		</div>
+		<div class="d-flex justify-content-center gap-3">
+			<a href="/Users/Login" class="add-bttn">
+				Login
+			</a>
+			<a href="/Users/Register" class="back-bttn">
+				Sign up
+			</a>
+		</div>
+	</div>
 </div>
-
-<div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Add item</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body text-center">
-                <p>What would you like to add?</p>
-                <div class="d-grid gap-2">
-                    <a id="addTaskBtn" asp-controller="Task" asp-action="Create" asp-route-dayId="" class="btn btn-primary">Add Task</a>
-                    <a id="addReminderBtn" asp-controller="Reminder" asp-action="Create" asp-route-dayId="" class="btn btn-secondary">Add Reminder</a>
-                    <a id="addMeetingBtn" asp-controller="Meeting" asp-action="Create" asp-route-dayId="" class="btn btn-success">Add Meeting</a>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-@section Scripts {
-    <script>
-        const modal = document.getElementById('addModal');
-        modal.addEventListener('show.bs.modal', function (event) {
-            const button = event.relatedTarget;
-            const dayId = button.getAttribute('data-day-id');
-
-            const updateHref = (btnId) => {
-                const btn = document.getElementById(btnId);
-                const url = new URL(btn.href);
-                url.searchParams.set('dayId', dayId);
-                btn.href = url.toString();
-            }
-
-            updateHref('addTaskBtn');
-            updateHref('addReminderBtn');
-            updateHref('addMeetingBtn');
-        });
-    </script>
-}

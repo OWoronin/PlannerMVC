@@ -151,7 +151,12 @@ namespace Pz_Proj_11_12.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Planners");
                 });
@@ -232,6 +237,27 @@ namespace Pz_Proj_11_12.Migrations
                     b.ToTable("Tasks");
                 });
 
+            modelBuilder.Entity("Pz_Proj_11_12.Models.User", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Login")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Users");
+                });
+
             modelBuilder.Entity("Pz_Proj_11_12.Models.Day", b =>
                 {
                     b.HasOne("Pz_Proj_11_12.Models.Planner", "Planner")
@@ -260,6 +286,17 @@ namespace Pz_Proj_11_12.Migrations
                     b.Navigation("Day");
 
                     b.Navigation("Priority");
+                });
+
+            modelBuilder.Entity("Pz_Proj_11_12.Models.Planner", b =>
+                {
+                    b.HasOne("Pz_Proj_11_12.Models.User", "User")
+                        .WithMany("Planners")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Pz_Proj_11_12.Models.Reminder", b =>
@@ -320,6 +357,11 @@ namespace Pz_Proj_11_12.Migrations
             modelBuilder.Entity("Pz_Proj_11_12.Models.Planner", b =>
                 {
                     b.Navigation("Days");
+                });
+
+            modelBuilder.Entity("Pz_Proj_11_12.Models.User", b =>
+                {
+                    b.Navigation("Planners");
                 });
 #pragma warning restore 612, 618
         }

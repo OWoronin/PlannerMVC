@@ -4,7 +4,10 @@
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public ICollection<Day> Days { get; set; } = new List<Day>();
 
+        //add createdDate field? ?? 
+        public ICollection<Day> Days { get; set; } = new List<Day>();
+        public int UserId { get; set; }
+        public User User { get; set; } = null!;
     }
 }

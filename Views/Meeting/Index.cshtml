@@ -1,69 +1,71 @@
 ﻿@model Pz_Proj_11_12.Models.Planner
 
 @{
-    ViewData["Title"] = "Meetings";
+	ViewData["Title"] = "Meetings";
 }
 
 <h2 class="mb-4">Meetings</h2>
+<hr />
 
 <div class="planner-table">
-    <table class="table text-center table-bordered">
-        <thead>
-            <tr>
-                @foreach (var day in Model.Days)
-                {
-                    <th>@day.Name</th>
-                }
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                @foreach (var day in Model.Days)
-                {
-                    <td>
-                        <div class="section">
-                            @foreach (var meeting in day.Meetings)
-                            {
-                                var priority = meeting.Priority.Name.ToLower();
-                                var priorityTitle = "Priority: Low";
-                                var starIcon = "far fa-star";
-                                if (priority == "medium")
-                                {
-                                    starIcon = "fas fa-star-half-alt";
-                                    priorityTitle = "Priority: Medium";
-                                }
-                                else if (priority == "high")
-                                {
-                                    starIcon = "fas fa-star";
-                                    priorityTitle = "Priority: High";
-                                }
+	<table class="table text-center table-bordered">
+		<thead>
+			<tr>
+				@foreach (var day in Model.Days)
+				{
+					<th>@day.Name</th>
+				}
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				@foreach (var day in Model.Days)
+				{
+					<td>
+						<div class="section">
+							@foreach (var meeting in day.Meetings.OrderBy(m => m.StartTime))
+							{
+								var priority = meeting.Priority.Name.ToLower();
+								var priorityTitle = "Priority: Low";
+								var starIcon = "far fa-star";
+								if (priority == "medium")
+								{
+									starIcon = "fas fa-star-half-alt";
+									priorityTitle = "Priority: Medium";
+								}
+								else if (priority == "high")
+								{
+									starIcon = "fas fa-star";
+									priorityTitle = "Priority: High";
+								}
 
-                                <div class="card p-2 mb-2" style="position:relative;">
-                                    <span class="priority-stars-corner" title="@priorityTitle">
-                                        <i class="@starIcon"></i>
-                                    </span>
-                                    <a asp-action="Details" asp-controller="Meeting" asp-route-id="@meeting.Id">
-                                        <div>
-                                            <strong>@meeting.Name</strong>
-                                        </div>
-                                        <div class="mt-1">
-                                            <span class="text-muted small">@meeting.StartTime</span>
-                                        </div>
-                                    </a>
-                                    <div class="mt-2">
-                                        <a class="btn btn-sm edit-outline action-btn" asp-action="Edit" asp-route-id="@meeting.Id">Edit</a>
-                                        <a class="btn btn-sm delete-outline action-btn" asp-action="Delete" asp-route-id="@meeting.Id">Delete</a>
-                                    </div>
-                                </div>
-                            }
-                        </div>
-
-                        <div class="mt-2">
-                            <a asp-action="Create" asp-route-dayId="@day.Id" class="btn btn-sm add-outline action-btn">Add Meeting</a>
-                        </div>
-                    </td>
-                }
-            </tr>
-        </tbody>
-    </table>
+								<div class="card p-2 mb-2" style="position:relative;">
+									<span class="priority-stars-corner" title="@priorityTitle">
+										<i class="@starIcon"></i>
+									</span>
+									<a asp-action="Details" asp-controller="Meeting" asp-route-id="@meeting.Id">
+										<div>
+											<strong>@meeting.Name</strong>
+										</div>
+										<div class="mt-1">
+											<span class="text-muted small">
+												@meeting.StartTime.ToString("HH:mm")-@meeting.EndTime.ToString("HH:mm")
+											</span>
+										</div>
+									</a>
+									<div class="mt-2 button-row">
+										<a class="table-btn-edit" asp-action="Edit" asp-route-id="@meeting.Id">Edit</a>
+										<a class="table-btn-delete" asp-action="Delete" asp-route-id="@meeting.Id">Delete</a>
+									</div>
+								</div>
+							}
+						</div>
+						<div>
+							<a asp-action="Create" asp-route-dayId="@day.Id" asp-route-plannerId="@Model.Id" class="full-width-btn">Add Meeting</a>
+						</div>
+					</td>
+				}
+			</tr>
+		</tbody>
+	</table>
 </div>
