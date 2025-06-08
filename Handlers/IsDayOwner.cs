@@ -22,13 +22,13 @@ namespace Pz_Proj_11_12.Handlers
             IsDayOwnerRequirement requirement,
             Day day)
         {
-            var userId = int.Parse(context.User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var userId = int.Parse(context.User.FindFirstValue(ClaimTypes.NameIdentifier)); //id zalog
 
 
             Planner? planner = day.Planner;
             if (planner == null)
             {
-                planner = await _context.Planners.FirstOrDefaultAsync(p => p.Id == day.PlannerId);
+                planner = await _context.Planners.FirstOrDefaultAsync(p => p.Id == day.PlannerId); //planner z dnia pobieram z db
             }
 
             //throw new Exception($"userId: {userId}, dayId: {day.Id}, plannerId: {planner.Id}, planner contains day: {planner.Days.Any(d => d.Id == day.Id)}");
@@ -38,6 +38,4 @@ namespace Pz_Proj_11_12.Handlers
             }
         }
     }
-
-
 }
